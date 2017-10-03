@@ -1,0 +1,2346 @@
+\PassOptionsToPackage{svgnames}{xcolor}
+\documentclass[11pt, a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+\usepackage[russian, english, croatian]{babel}
+%\usepackage{algorithm}
+%\usepackage[linesnumbered,ruled]{algorithm2e}
+\usepackage{caption}
+%\usepackage{algpseudocode}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{comment}
+\usepackage{clrscode3e}
+\usepackage{multicol}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage[nottoc,numbib]{tocbibind}
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{5}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usetikzlibrary{decorations.pathreplacing,angles,quotes}
+\hypersetup{colorlinks, citecolor=black, filecolor=black, linkcolor=black, urlcolor=black}
+\usetikzlibrary{positioning, arrows, calc, trees, matrix, decorations.pathmorphing, shapes.geometric}
+\geometry{
+	a4paper,
+	total={166mm,253mm},
+	left=22mm,
+	top=22mm,
+}
+\pagestyle{fancy}
+
+\lhead{}
+\rhead{\thepage}
+\cfoot{}
+\chead{\textit{Компаративна анализа приоритетних редова}}
+%\renewcommand{\headrulewidth}{.8pt}
+\setcounter{secnumdepth}{4}
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+
+\usepackage[object=vectorian]{pgfornament}
+\newcommand{\sectionline}{%
+	\noindent
+	\begin{center}
+		{\color{Black}
+			\resizebox{0.5\linewidth}{1ex}
+			{{%
+					{\begin{tikzpicture}
+						\node  (C) at (0,0) {};
+						\node (D) at (9,0) {};
+						\path (C) to [ornament=85] (D);
+						\end{tikzpicture}}}}}%
+	\end{center}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newtheorem{teorema}{\selectlanguage{russian} Теорема}[subsection]
+\newtheorem{definicija}{\selectlanguage{russian} Дефиниција} [subsection]
+\newtheorem{definicijaB}{\selectlanguage{russian} Дефиниција} [section]
+\newtheorem{lema}{\selectlanguage{russian} Лема} [subsection]
+\newtheorem{posledicaL}{\selectlanguage{russian} Последица} [lema]
+\newtheorem{posledicaT}{\selectlanguage{russian} Последица} [teorema]
+\theoremstyle{remark}
+\newtheorem*{dokaz}{\selectlanguage{russian} Доказ}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{amsmath}
+\numberwithin{equation}{section}
+
+\begin{document}
+	\selectlanguage{russian}
+	
+	\begin{titlepage}
+		
+		\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+		
+		\center % Center everything on the page
+		
+		%----------------------------------------------------------------------------------------
+		%	HEADING SECTIONS
+		%----------------------------------------------------------------------------------------
+		
+		\textbf{\LARGE МАТЕМАТИЧКА ГИМНАЗИЈА}\\[5cm] % Name of your university/college
+		\textbf{\Large МАТУРСКИ РАД}\\[0.3cm] % Major heading such as course name
+		из предмета \\[0.3cm]
+		\textbf{\Large Програмирање и програмски језици}\\[.7cm] % Minor heading such as course title
+		на тему\\[0.7cm]
+		
+		%----------------------------------------------------------------------------------------
+		%	TITLE SECTION
+		%----------------------------------------------------------------------------------------
+		
+		\HRule \\[0.4cm]
+		{ \huge \bfseries Компаративна анализа приоритетних редова}\\[0.4cm] % Title of your document
+		\HRule \\[1.5cm]
+		
+		%----------------------------------------------------------------------------------------
+		%	AUTHOR SECTION
+		%----------------------------------------------------------------------------------------
+		
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\emph{Ученик:}\\
+				Коста Грујчић, $IV_b$ % Your name
+			\end{flushleft}
+		\end{minipage}
+		~
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				\emph{Ментор:} \\
+				Петар Величковић % Supervisor's Name
+			\end{flushright}
+		\end{minipage}\\[10cm]
+		
+		% If you don't want a supervisor, uncomment the two lines below and remove the section above
+		%\Large \emph{Author:}\\
+		%John \textsc{Smith}\\[3cm] % Your name
+		
+		%----------------------------------------------------------------------------------------
+		%	DATE SECTION
+		%----------------------------------------------------------------------------------------
+		
+		{\large Београд, мај 2017.}\\[2.5cm] % Date, change the \today to a set date if you want to be precise
+		
+		%----------------------------------------------------------------------------------------
+		%	LOGO SECTION
+		%----------------------------------------------------------------------------------------
+		
+		%\includegraphics{Logo}\\[1cm] % Include a department/university logo - this will require the graphicx package
+		
+		%----------------------------------------------------------------------------------------
+		
+		\vfill % Fill the rest of the page with whitespace
+		
+	\end{titlepage}
+
+	\pagenumbering{roman}
+	
+	\renewcommand*\contentsname{Садржај}
+	\tableofcontents
+	\newpage
+	
+	\pagenumbering{arabic}
+	
+	\section{Увод}
+	У основи свих рачунарских програма се налази нека обрада података. Како је неретко количина података велика, потребно их је организовати у структуре података. Специјално, приоритетни редови су своју примену пронашли у проблемима који се тичу опслуживања захтева према некој важности. Први такви проблеми су се јавили много пре рачунара, а данас се користе у рачунарским мрежама за контролу протока, симулацији дискретних догађаја, разним алгоритмима и др. \\
+	
+	\begin{definicijaB}
+		\normalfont
+		Приоритетни ред је скуп у ком је сваком елементу придружен елемент неког потпуно уређеног скупа као његов \textit{приоритет}.
+	\end{definicijaB}
+	
+	\noindent Приметимо да једноставне структуре података попут низа, листе, реда или стека, премда неефикасне, могу бити приоритетни редови. \\
+	
+	\noindent Како се сваком чвору придружује приоритет, сматраћемо да вредност кључа чвора (или само вредност чвора) представља његов приоритет. Уколико је неопходно да поред приоритета чувамо још неку вредност, чвор можемо представити слогом, па би приоритетни ред био представљен скупом слогова. \\
+	
+	\noindent Операције које ћемо описати за сваки приоритетни ред су:
+	\begin{itemize}
+		\item проналазак чвора са најмањим кључем (\proc{Find-Min}),
+		\item уклањање чвора са најмањим кључем (\proc{Delete-Min}),
+		\item додавање новог чвора (\proc{Insert}),
+		\item смањивање кључа произвољног чвора (\proc{Decrease-Key}) и
+		\item спајање два приоритетна реда у један (\proc{Merge}). \\
+	\end{itemize}
+	
+	\noindent Поред директне примене у пракси, многи приоритетни редови служе за теоријски оптимално извршавање појединих алгоритама. Значајан је број структура података које су осмишљене са баш овим циљем. Структуре података које су обрађене не морају нужно да буду приоритетни редови, али испуњавају све услове за то. Овде ће бити анализирани Дајсктрин и Примов алгоритам употребом $d$--хипа, биномног хипа, Фибоначијевог хипа, стабла бинарне претраге, сплеј стабла и ван Емде Боасовог стабла. Времена извршавања употребом поменутих приоритетних редова ћемо на крају упоредити и утврдити колико се теоријски оптимална структура података показује у пракси. Сваки приоритетни ред је детаљно описан, уз доказане сложености за сваку операцију. \\
+	
+	\noindent Све приоритетне редове описујемо тако да се кључеви уређују по мањој вредности, па ће и дефиниције бити у складу са тим. \\
+	
+	\noindent Задржавамо енглеску терминологију за скраћенице, попут МST -- минимално разапињуће стабло, SSSP -- најкраћи пут из једног извора итд. \\
+		
+	\noindent Сви кодови су писани у програмском језику C++ и доступни су на приложеном CD-у.
+	
+	\newpage
+	
+	\section {Употреба приоритетних редова у неким алгоритмима}
+	Изложићемо два алгоритма која се могу имплементирати употребом приоритетних редова и објаснити којим приоритетним редом је њихову асимптотску сложеност могуће свести на оптималну. \\
+	
+	\noindent Сложеност сваког алгоритма изразићемо у облику
+	\begin{equation*}
+	O \left (\sum_{i=1}^{\left | S \right |} k_i \cdot O(P_i) \right)
+	\end{equation*}
+	
+	\noindent где је $S$ скуп функција које се користе у имплементацији алгоритма, $P_i$ сложеност и-те функције, а $k_i$ број позивања и-те функције. \\
+	
+	\noindent Сматрамо да је број чворова у графу $n$, а број грана $m$.
+	
+	\subsection{Дајкстрин алгоритам}
+	
+	Нека је $dist[v]$ удаљеност чвора $v$ од изворног чвора $source$. Иницијално је $dist[source]=0$, а за све остале чворове износи $\infty$\footnote{У пракси је ту вредност могуће представити целобројним типом података који користимо за представљање приоритета у реду и означава вредност од које су сви други приоритети мањи. Аналогно важи и за $-\infty$.}. \\
+	
+	\indent На почетку иницијализујемо приоритетни ред у ком су кључеви одговарајуће $dist$ вредности. Функцију \proc{Delete-Min} ћемо позвати укупно $n$ пута јер ће сваки чвор бити обрађен тачно једном. Најмањи чвор приоритетног реда је чвор којим покушавамо да поправимо што је више могуће постојећих удаљености. За сваки такав чвор покушаћемо да смањимо растојање свих његових директних суседа. Када за неки чвор постигнемо мању удаљност морамо да ажурирамо прироритетни ред па фунцкију \proc{Decrease-Key} позивамо $O(m)$ пута. \\
+	
+	\begin{comment}
+	\begin{codebox}
+		\Procname{\proc{Dijkstra}($G$, $source$)}
+		\li $dist[source]=0$
+		\li \For \textbf{each} $v$ in $G$
+		\li \Do \If $v\neq source$
+		\li \Do $dist[v]=\infty$
+		\End \End
+		\li $Q=\proc{Priority-Queue-Empty-Node}()$
+		\li \proc{Priority-Queue-Init}($Q$) \Comment{\selectlanguage{russian}сви чворови су додати у ред}
+		\li \While $Q$ nije prazan
+		\li \Do $v=\proc{Priority-Queue-Delete-Min}(Q)$
+		\li \For \textbf{each} $u$ in $v.adjacent$
+		\li \Do \If $dist[u]>dist[v]+e(v, u)$
+		\li \Do $dist[u]=dist[v]+e(v, u)$
+		\li \proc{Priority-Queue-Decrease-Key}($Q$, $u$, $dist[u]$)
+	\end{codebox}
+	\end{comment}
+	
+	\noindent Сложеност је $O(O(\proc{Init})+n \cdot O(\proc{Delete-Min})+m \cdot O(\proc{Decrease-Key}))$.
+	
+	\subsection{Примов алгоритам}
+	Приоритетни ред градимо над гранама датог графа и то тако да су тежине грана кључеви приоритетног реда. Сваки чвор ћемо обрадити тачно једном јер сви чворови морају да се налазе у минималном разапињућем стаблу. Најмањи чвор представља грану најмање тежине која спаја неки од чворова у MST-у са неким од преосталих чворова. Грану која спаја два чвора MST-а игноришемо. \\
+	
+	\begin{comment}
+	\begin{codebox}
+		\Procname{\proc{Prim}($G$, $source$)}
+		\li $Q=\proc{Priority-Queue-Empty-Node}()$
+		\li \proc{Priority-Queue-Init}($Q$) \Comment{\selectlanguage{russian}све гране $source$ чвора су додате у ред}
+		\li \While $MST.size \neq G.n$
+		\li \Do  $e=\proc{Priority-Queue-Delete-Min}(Q)$
+		\li \If $e.v \notin MST$
+		\li \Do $MST.add(e)$
+		\li \For \textbf{each} $u$ in $(e.v).adjacent$
+		\li \Do \proc{Priority-Queue-Insert}($Q$, $e(e.v, u)$)
+		\End \End \End
+		\li \Return $MST$
+	\end{codebox}
+	\end{comment}
+	
+	\noindent Сложеност је $O(\cdot O(\proc{Init})+m\cdot O(\proc{Insert}))$. \\
+	
+	\newpage
+	\section{Хип}
+	
+	Доналд Џонсон\footnote{Donald B. Johnson -- амерички информатичар. Најпознатији по раду из области дизајна и анализе алгоритама.} је осмислио $d$ -- хип 1975. године са циљем да унапреди извршавање алгоритама као што су Дајкстрин (SSSP) и Примов (MST) алгоритам [4]. \\
+	
+	\noindent Обрадићемо опште, $d$ -- хипове, а како је степен $d$ важан, приликом изражавања сложености неће бити занемарен. Сматрамо да се хип односи на $d$ -- хип и да је број $d$ степен хипа.
+	\subsection{Дефиниција и својства}
+
+	\begin{definicija} [Хип својство]
+		\normalfont Кључ сваког чвора, осим листова, је мањи од кључева своје деце.
+	\end{definicija}
+	\begin{definicija}
+		\normalfont Уређено стабло у ком су сви кључеви различити и чворови имају степен $d$, осим листова и можда родитеља листова, и које испуњава хип својство је \textit{хип}. На последњем нивоу сви постојећи чворови морају бити лево од оних који недостају.
+	\end{definicija}
+
+	\indent Без умањења општости можемо претпоставити да су чворови хипа уређени у BFS поретку, да би хип могли једноставно да представимо. То можемо урадити помоћу низа, али би тада морали да прецизирамо величину низа приликом самог иницијализовања хипа. Зато се опредељујемо за употребу динамичког низа\footnote{Амортизоване сложености динамичког низа су $O(1)$.}, јер се величина таквог низа може произвољно ширити. Такав низ ћемо означити са $A$. Подразумевамао да је динамички низ $A$ индексиран од $0$ и да се на тој позицији налази вредност корена хипа. \\
+	\indent Приметимо да из хип својства следи да сваки чвор $v$ мора имати кључ мањи од свих чворова у подстаблу са кореном $v$.
+
+	\begin{figure} [H]
+		\renewcommand\figurename{Слика}
+		\begin{center}
+		\begin{tikzpicture} [level/.style={text centered, align=center, sibling distance=3cm/#1}, every node/.style={draw=black, circle, thick, inner sep=0pt, minimum size=6mm}]
+		
+		\node (root) {1}
+		child {node (v11) {3}
+			child {node (v21) {7}
+				child {node (v31) {20}}
+				child {node (v32) {30}}
+				child {node (v33) {45}}
+				child [missing]
+				child [missing]
+			}
+			child {node (v22) {10}
+				child [missing]
+				child {node (v34) {11}}
+				child {node (v35) {14}}
+				child [missing]
+			}
+			child {node (v23) {9}}
+			child [missing]
+		}
+		child {node (v12) {2}
+			child[missing]
+			child {node (v24) {5}}
+			child {node (v25) {15}}
+			child {node (v26) {83}}
+			child[missing]
+		}
+		child {node (v13) {6}
+			child [missing]
+			child {node (v27) {32}}
+			child {node (v28) {27}}
+			child {node (v29) {18}}
+		};
+		
+		\end{tikzpicture}
+		\caption{$3$ -- хип у ком су кључеви природни бројеви}
+		\end{center}
+	\end{figure}
+
+	\begin{lema}
+		\normalfont Висина хипа је $O(\log_d n)$.
+	\end{lema}
+	\begin{dokaz}
+		Број чворова хипа је највећи уколико је стабло комплетно, па ћемо зато претпоставити да је хип комплетно $d$ -- стабло. Тада на основу формуле за збир првих $m$ чланова геометријског низа важи \\
+		\begin{equation}
+		\sum_{k=0}^{h} d^k=\frac{d^{h+1}-1}{d-1}=n.
+		\end{equation}
+		На крају добијамо тражено
+		\begin{equation}
+			h=O(\log_d nd)=O(1+\log_d{n})=O(\log_d n).
+		\end{equation}
+		\qed
+	\end{dokaz}
+	\begin{lema}
+		\normalfont Хип има највише $\frac{n}{d}+1$ чворова који нису листови.
+	\end{lema}
+	\begin{dokaz}
+		Последњи чвор у хипу заузима позицију $n-1$, а његов родитељ позицију $\left \lfloor \frac{n-2}{d} \right \rfloor$. Како хип садржи $n$ чворова, то су чворови на позицијама почев од $\left \lfloor \frac{n-2}{d} \right \rfloor +1$ листови јер ником нису родитељи. Према томе, чворови на позицијама од $0$ до $\left \lfloor \frac{n-2}{d} \right \rfloor$ нису листови. Њих укупно има $\left \lfloor \frac{n-2}{d} \right \rfloor +1$. Трансформацијом израза добијамо тражено
+		\begin{equation}
+		\left \lfloor \frac{n-2}{d} \right \rfloor +1 \leq \frac{n-2}{d} +1 = \frac{n}{d}+\frac{d-2}{d} < \frac{n}{d} +1.
+		\end{equation}
+		\qed
+	\end{dokaz}
+	\begin{posledicaL}
+		\normalfont До $k$ -- тог нивоа изнад нивоа листова постоји највише $\frac{n}{d^{k}}+1$ чворова.
+	\end{posledicaL}
+
+	\bigbreak
+
+	\indent Имајући у виду дефиницију хипа, закључујемо да су за сваки чвор $v$ вредности кључева деце $A[vd+1]$, $A[vd+2]$, ..., $A[vd+d]$. Уколико $i$ -- то дете чвора $v$ не постоји, онда сматрамо да је $A[vd+i]=A[vd+i+1]=...=A[vd+d]=\infty$, чак и када неке од поменутих позиција не постоје. \\
+	\indent Будући да нам је за чување хипа od $n$ чворова потребан динамички низ величине $n$, меморијска сложеност хипа је $O(n)$.
+
+	\subsection{Подржане операције}
+	Увешћемо функције \proc{Heap-Parent} и \proc{Heap-Child}.
+	\begin{multicols}{2}
+	\begin{codebox}
+		\Procname{$\proc{Heap-Parent}(x, d)$}
+		\li \Return $\lfloor (x-1)/d \rfloor$
+	\end{codebox}
+	\begin{codebox}
+		\Procname{$\proc{Heap-Child}(x, d, i)$}
+		\li \Return $dx+i$
+	\end{codebox}
+	\end{multicols}
+
+	\subsubsection{Проналазак чвора са најмањим кључем}
+	Како је најмања вредност у хипу она коју има корен, најмањи чвор можемо пронаћи у $O(1)$.
+
+	\begin{codebox}
+		\Procname{$\proc{Heap-Find-Min}(A)$}
+		\li \Return $A[0]$
+	\end{codebox}
+
+	\subsubsection{Уклањање чвора са најмањим кључем}
+	Уклањањем корена хипа хип постаје неповезан. Због тога морамо да нађемо нови чвор тако да стабло остане скоро пуно, а да хип својство не буде нарушено.
+
+	\indent Да би стабло остало скоро пуно, узимамо сасвим десни лист хипа и мењамо га са кореном. Будући да желимо да уклонимо корен, довољно је да само обришемо последњи елемент низа $A$. Како је сада хип својство можда нарушено, потребно је да уредимо хип. То радимо ,,спуштањем'' корена докле је то потребно низ хип. Проверавамо да ли је кључ чвора мањи од неког кључа деце, водећи рачуна да децу проверавамо идући са лева на десно, и прво дете које то испуњава постаје нови корен. Поступак понављамо док или не дођемо до листа стабла или док ни једно дете нема мањи кључ. \\
+
+	\indent Уводимо функцију \proc{Heap-Fix-Down} да би лакше уредили хип после уклањања чвора, а која ће нам касније такође користити.
+
+	\begin{codebox}
+		\Procname {$\proc{Heap-Fix-Down}$($A$, $d$, $x$)}
+		\li \For $i \gets 1 \To d$
+		\li \Do
+		\If $A[\proc{Heap-Child}$($x$, $i$)$] < A[x]$
+		\li \Do
+		$\func{swap}$($A$[\proc{Heap-Child}($x$, $d$, $i$)], $A[x]$)
+		\li $\proc{Heap-Fix-Down}$($A$, $d$, \proc{Child}($x$, $d$, $i$))
+		\li \Return
+		\End
+		\End
+	\end {codebox}
+	
+	\begin{codebox}
+		\Procname{$\proc{Heap-Delete-Min}(A, d)$}
+		\li $\func{swap}$($A[0]$, $A[\attrib{A}{size}-1]$)
+		\li $\attrib{A}{\func{pop}()}$
+		\li $\proc{Heap-Fix-Down}$($A$, $d$, $0$)
+	\end{codebox}
+
+	\indent Током проласка кроз стабло, у свакој итерацији смањујемо висину подстабла у ком се налазимо, па ћемо се у најгорем случају спустити за целу висину стабла. На свакој висини ћемо у најгорем случају проверити сву децу. Укупна временска сложеност функције \textsc{Heap-Fix-Down}, а самим тим и функције \proc{Heap-Delete-Min} је $O(d\log_d n)$.
+
+	\subsubsection{Додавање новог чвора}
+	Идеја додавања чвора у хип је слична оној која се користи приликом уклањања чвора са најмањим кључем. \\
+
+	\indent Када додамо чвор, хип својство мора да важи и стабло мора бити скоро пуно. Зато ћемо чвор додати као скроз десни лист, односно на крај низа $A$. Како сада хип својство може бити нарушено, потребно је да уредимо хип. Чвор ћемо ,,пењати'' уз хип докле год је кључ родитеља већи од кључа чвора, простом заменом одговарајућих вредности. Поступак се завршава када или дођемо до корена или када родитељ има мањи кључ. \\
+
+	\indent Уводимо функцију \proc{Heap-Fix-Up} којом олакшавамо додавање новог чвора, а која ће нам касније бити од користи.
+
+	\begin{codebox}
+			\Procname{\proc{Heap-Fix-Up}($A$, $d$, $x$)}
+			\li \If{$A[x] < A[$\proc{Heap-Parent}($A$, $d$, $x$)]}
+			\li \Do
+			\func{swap}($A[x]$, $A[$\proc{Heap-Fix-Up}($A$, $d$, $x$)$]$)
+			\li \proc{Fix-Up}($A$, \proc{Heap-Parent}($A$, $d$, $x$))
+	\end{codebox}
+
+	\begin{codebox}
+		\Procname{\proc{Heap-Insert-Node}($A$, $d$, $val$)}
+		\li $A.$\func{push}($val$)
+		\li \proc{Heap-Fix-Up}($A$, $d$, $\attrib{A}{size}-1$)
+	\end{codebox}
+
+	\indent Током проласка кроз стабло, у свакој итерацији увећавамо висину подстабла у ком се налазимо, па ћемо се у најгорем случају попети за целу висину стабла. Зато временска сложеност функције \proc{Heap-Fix-Up}, а самим тим и функције \proc{Heap-Insert-Node} износи $O(\log_{d} n)$.
+
+	\subsubsection{Смањивање кључа произвољног чвора}
+	Да би хип својство остало на снази, после смањивања кључа је можда потребно ажурирати хип. Како вредност кључа постаје мања, чвор или треба поставити на место неког од предака или оставити на старом месту. Приметимо да нам за то одговара већ коришћена метода \proc{Heap-Fix-Up}, која нам је служила да лист поставимо на одговарајуће место, што значи да сложеност функције \proc{Heap-Decrease-Key} износи $O(\log_d n)$.
+	
+	\begin{codebox}
+		\Procname {\proc{Heap-Decrease-Key}($A$, $d$, $x$, $val$)}
+		\li $A[x] \gets val$
+		\li \proc{Heap-Fix-Up}($A$, $d$, $x$)
+	\end{codebox}
+
+	\subsubsection{Уклањање произвољног чвора}
+	Након што смо размотрили уклањање најмањег чвора и смањивање кључа произвољног чвора, објаснићемо да је то довољно да се произвољан чвор уклони из хипа. \\
+
+	\indent Идеја којом се водимо јесте да чвор који желимо да уклонимо начинимо кореном хипа. Да би то урадили, смањићемо кључ на вредност коју ни један други чвор не може да има, да би били сигурни да ће постати корен, који потом уклањамо из хипа.
+
+	\begin{codebox}
+		\Procname {\proc{Heap-Delete-Node}($A$, $d$, $x$)}
+		\li \proc{Heap-Decrease-Key}($A$, $d$, $x$, $-\infty$)
+		\li \proc{Heap-Delete-Min}($A$, $d$)
+	\end{codebox}
+
+	\indent Како се користимо већ описаним функцијама, сложеност функције \proc{Heap-Delete-Node} износи $O(d \log_d n)$.
+
+	\subsubsection{Иницијализација хипа}
+	Претпоставимо да низ $A$ садржи скоро пуно уређено стабло, али да оно не исупањава хип својство и да ми желимо да од таквог стабла начинимо хип. Лако можемо остварити сложеност $O(n \log_d n)$ тако што би правили нови хип додавањем чворова редом. Доказаћемо да је то могуће урадити ефикасније. \\
+
+	\indent Хип ћемо изградити одоздо на горе, тако што у сваком кораку увећавамо висину формираних хипова све док се не постигне висина стабла. \\
+	\indent Почињемо од листова, који сами за себе представљају хип висине $0$. Затим се пењемо на следећи ниво и формирамо хипове висине $1$ користећи се хиповима висине $0$, и то тако да корен сваког хипа висине $1$ има тачно $d$ деце, осим можда једног. Приликом формирања таквих хипова, тренутни корен је можда потребно спустити на место неког његовог листа да би испунили хип својство. Понављајући описан поступак и увећавајући висину у сваком кораку, почетно стабло постаје хип.
+
+	\begin{codebox}
+		\Procname {\proc{Heap-Init}($A$, $d$)}
+		\li \For {$i \gets \lfloor (n-2)/d \rfloor$ \Downto $0$}
+		\li \Do
+		\proc{Heap-Fix-Down}($A$, $d$, $i)$
+	\end{codebox}
+
+	Функција \proc{Heap-Init} неће бити позвана за листове. У најгорем случају ће сваки чвор који није лист бити спуштен једном. Сваки чвор на наредном нивоу ће у најгорем случају бити спуштен још једном. Према томе, корен ће у најгорем случају бити спуштен за целу висину стабла. \\
+	\indent Како према леми 3.1.2 стабло има највише $\frac{n}{d}+1$ чворова који нису листови, закључујемо да ће се прво спуштање десити на највише исто толико чворова и да је сложеност сваког спуштања $O(d)$. Како према последици леме 3.1.2 на следећем нивоу постоји највише $\frac{n}{d^2}+1$ чворова, десиће се још не више од толико спуштања, свако сложености $O(d)$. Из наведеног можемо извести укупну сложеност функције \proc{Heap-Init} \\
+	\begin{equation}
+	\sum_{k=1}^{\log_d n}\left(\frac{n}{d^k}+1 \right) \cdot O(d)=O\left (n \cdot \sum_{k=0}^{\log_d n-1}\frac{1}{d^k} \right).
+	\end{equation}
+	\indent Према формули за збир првих $m$ чланова геометријског низа следи
+	\begin{equation}
+	\sum_{k=0}^{\log_d n-1}\frac{1}{d^k}=\frac{1-nd}{n-nd}.
+	\end{equation}
+	\indent Сада лако можемо изразити коначну сложеност
+	\begin{equation}
+	O \left (n \cdot \sum_{k=0}^{\log_d n-1}\frac{1}{d^k} \right)=O \left (n\cdot \frac{1-nd}{n-nd} \right)=O\left(\frac{nd-1}{d-1} \right)=O(n).
+	\end{equation}
+
+	\bigbreak
+
+	\subsubsection{Спајање два хипа}
+	Користећи функцију \proc{Heap-Init}, можемо спојити два хипа у сложености $O(n+m)$, где $n$ и $m$ представљају број чворова хипова. Приметимо да хипови не морају бити истог степена и да нови хип може имати произвољан степен.
+
+	\begin{codebox}
+		\Procname {\proc{Heap-Merge}($A$, $B$, $d$)}
+		\li $C \gets A+B$
+		\li \proc{Heap-Init}($C$, $d$)
+	\end{codebox}
+
+	\newpage
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	\section{Биномни хип}
+	Жан Вилемин\footnote{Jean Vuillemin -- фраунцуски информатичар.} је 1978. године представио биномни хип из потребе да се стандардном $d$--хипу убрза операција спајања [5].
+	
+	\subsection{Дефиниција и својства}
+	Основа биномног хипа је биномно стабло, па ћемо прво објаснити ту врсту стабала. Биномно стабло реда $k$ ћемо означити са $B_k$.
+	\begin{definicija}
+		\normalfont
+		Стабло од једног чвора је биномно стабло реда $0$, док се стабло $B_k$ добија спајањем два стабла $B_{k-1}$ тако да је лево дете једног стабла корен другог стабла.
+	\end{definicija}
+
+	\indent Из дефиниције директно следи да $B_k$ садржи тачно $2^k$ чворова и да има висину $k$. Лако се увиђа да биномно стабло $B_k$ садржи као децу корена сва стабла $B_{k-1}$, $B_{k-2}$, ..., $B_0$. \\
+	
+	\begin{figure} [H]
+		\renewcommand\figurename{Слика}
+		\begin{center}
+			\begin{tikzpicture} [level/.style={sibling distance = 3cm/#1,
+				level distance = 1cm}]
+		
+			\node [circle, fill=black] (c) {}
+			;
+			
+			\node [circle, fill=black, right=3em of c] (k) {}
+			child { node [circle, fill=black] {} }
+			;
+			
+		
+			\node [circle, fill=black, right=10em of k] (b) {}
+			child { node [circle, fill=black] (d) {} 
+				child { node[circle, fill=black] (e) {} }
+			}
+			child { node [circle, fill=black] (f) {} }
+			child [missing]
+			;
+		
+			\node [circle, fill=black, right=18em of b] (a) {}
+			child { node [circle, fill=black] {}
+				child {node [circle, fill=black] {}
+					child {node [circle, fill=black] {}}
+				}
+				child { node [circle, fill=black] {}}
+				child[missing]
+			}
+			child { node [circle, fill=black] {}
+				child { node [circle, fill=black] {}}
+			}
+			child { node [circle, fill=black] {}}
+			child [missing]
+			child [missing]
+			;
+		
+			\draw [-stealth, color=white] (b.east) -- (a.west);
+			\draw [-stealth, color=white] (c.east) -- (k.west);
+			\end{tikzpicture}
+			\caption{Бинома стабла $B_0$, $B_1$, $B_2$ и $B_3$}
+		\end{center}
+	\end{figure}
+	
+	\begin{definicija}
+		\normalfont
+		Шума биномних стабала која испуњавају хип својство и у којој не постоје два биномна стабла истог реда се зове \textit{биномни хип}.
+	\end{definicija}
+	\indent Питање које се намеће јесте како формирати биномни хип од $n$ чворова и како би такав хип изгледао? Одговор лежи у бинарној репрезентацији броја $n$ јер је
+	\begin{equation}
+		n=\sum_{k=0}^{\lfloor \log n \rfloor} b_k \cdot 2^k
+	\end{equation}
+	где је $b_k \in \lbrace 0, 1 \rbrace$ и означава $k$ -- ти бит у бинарној репрезентацији броја $n$. Према томе, биномни хип ће садржати биномно стабло $B_k$ ако је $b_k=1$. На пример, ако је $n=13$ тада је $(13)_2=1101$, па се такав биномни хип представља шумом биномних стабала $B_3$, $B_2$ и $B_0$. \\
+	\indent Биномни хип који има само једно биномно стабло се назива \textit{прост биномни хип}. \\
+	
+	\begin{figure} [H]
+		\renewcommand\figurename{Слика}
+		\begin{center}
+			\begin{tikzpicture} [level/.style={sibling distance = 3cm/#1,
+				level distance = 1cm}]
+			
+			\node [circle, fill=black] (c) {}
+			;
+			
+			\node [circle, fill=black, right=10em of c] (b) {}
+			child { node [circle, fill=black] (d) {} 
+				child { node[circle, fill=black] (e) {} }
+			}
+			child { node [circle, fill=black] (f) {} }
+			child [missing]
+			;
+			
+			\node [circle, fill=black, right=22em of b] (a) {}
+			child { node [circle, fill=black] {}
+				child {node [circle, fill=black] {}
+					child {node [circle, fill=black] {}}
+				}
+				child { node [circle, fill=black] {}}
+				child[missing]
+			}
+			child { node [circle, fill=black] {}
+				child { node [circle, fill=black] {}}
+			}
+			child { node [circle, fill=black] {}}
+			child [missing]
+			child [missing]
+			;
+			
+			\draw [-stealth, thin, dashed] (b.east) -- (a.west);
+			\draw [-stealth, thin, dashed] (c.east) -- (b.west);
+			\end{tikzpicture}
+			\caption{Биномни хип од $13$ чворова}
+		\end{center}
+	\end{figure}
+	
+	\indent Биномни хип је погодно представити у ,,лево дете, десни брат'' маниру. За сваки чвор ћемо чувати показивач на лево дете, десног брата и родитеља. Када неки чвор нема неки од атрибута, сматрамо да показивач показује на \textsc{NIL}. Како нам је важан ред биномног стабла, чуваћемо и тај податак. За сваки чвор чувамо $O(1)$ атрибута, па је меморијска сложеност биномног хипа $O(n)$, где је $n$ број чворова у стаблу. \\
+	\indent Атрибути $parent$, $child$, $sibling$, $degree$ редом означавају родитеља, лево дете, десног брата и степен. Све корене биномног хипа ћемо организовати у \textit{листу корена}.
+	
+	\subsection{Подржане операције}
+	Свака операција се заснива на ефикасном спајању два проста биномна хипа истог реда. Реализација се ослања на дефиницију биномног стабла. За корен хипа постављамо мањи од корена који ће бити родитељ оном дугом. 
+	
+	\begin{codebox}
+		\Procname {\proc{Binomial-Link}($p$, $q$)}
+		\zi \Comment $q.key < p.key$
+		\li $p.sibling = q.left$
+		\li $q.left=p$
+		\li $p.parent=q$
+		\li $q.degree \gets q.degree +1$
+	\end{codebox}
+
+	\bigbreak
+
+	\noindent Како су све операције константне сложености, функција \const{Binomial-Link} захтева $O(1)$ времена.
+
+	\subsubsection{Проналазак чвора са најмањим кључем}
+	Најмањи чвор мора бити корен неког простог биномног хипа па је из тог разлога довољно да проверимо само те вредности. Сложеност функције \const{Binomial-Heap-Find-Min} очигледно износи $O(\log n$).
+
+	\begin{codebox}
+		\Procname {\proc{Binomial-Heap-Find-Min}($H$)}
+		\li $ret=\const{NIL}$
+		\li $x=H.head$
+		\li \While $x \neq \const{NIL}$
+		\li \Do
+		\If $ret == \const{NIL}$ or $ret.key > x.key$
+		\li \Do
+		$ret=x$
+		\End
+		\li $x=x.sibling$
+		\End
+		\li \Return $ret$
+	\end{codebox}
+
+	\subsubsection{Спајање два биномна хипа}
+	Спајање два биномна хипа у великој мери подсећа на сабирање у систему са основом $2$. Повезујемо биномна стабла на начин на који се сабирају битови приликом сабирања два бинарна броја који представљају број чворова датих биномних хипова. Када се споје два биномна стабла истог реда, тада новодобијено стабло користимо као ,,пренос'' за следећу позицију. \\
+
+	\noindent Користићемо функцијe \const{Binomial-Heap-Merge-Roots}, која спаја листе корена $H_1$ и $H_2$ у једну листу која је уређена по степенима у монотоно растућем поретку, и \const{Make-Binomial-Heap}, која прави празан биномни хип.
+
+	\begin{codebox}
+		\Procname {\proc{Binomial-Heap-Merge}($H_1$, $H_2$)}
+		\li $H=\proc{Make-Binomial-Heap}()$
+		\li $H.head=\proc{Binomial-Heap-Merge-Roots}$($H_1$, $H_2$)
+		\li \If $H.head==\const{NIL}$
+		\li \Do
+		\Return $H$
+		\End
+		\li $prev=\const{NIL}$
+		\li $x=H.head$
+		\li $next=x.sibling$
+		\li \While $next \neq \const{NIL}$
+		\li \Do
+		\If $(x.degree \neq next.degree$) or
+		\zi \Do ($next.sibling \neq \const{NIL}$ and $(next.sibling).degree==x.degree$)
+		\li \Do
+		$prev=x$
+		\li $x=next$
+		\End
+		\End
+		\li \Do \Else \If $x.key < next.key$
+		\li \Do $x.sibling=next.sibling$
+		\li \proc{Binomial-Link}($next$, $x$)
+		\End
+		\li \Do \Else \If $prev==\const{NIL}$
+		\li \Do $H.head=next$
+		\End
+		\li \Do \Else $prev.sibling==next$
+		\End
+		\li \proc{Binomial-Link}($x$, $next$)
+		\li $x=x.next$
+		\End
+		\li $next=x.sibling$
+		\End
+		\End
+		\li \Return $H$
+	\end{codebox}
+
+	\bigbreak
+
+	\indent У функцији \const{Binomial-Heap-Merge} се \While петља извршава тачно $\lfloor \log n \rfloor$ пута, па функција \const{Binomial-Heap-Merge} захтева $O(\log n)$ времена. \\
+	\indent Уколико би чували показивч на најмањи чвор, који би ажурирали по потреби, најмањи чвор онда можемо пронаћи у $O(1)$. Приметимо да то нема утицај на сложеност осталих операција.
+
+	 \subsubsection{Додавање новог чвора}
+	 Чвор додајемо тако што га прикажемо као прост биномни хип $B_0$ и спојимо са датим биномним хипом. Функција \const{Binomial-Heap-Insert-Node} очигледно захтева $O(\log n)$ времена. 
+	
+	\begin{codebox}
+		\Procname {\proc{Binomial-Heap-Insert-Node}($H$, $x$)}
+		\li $G = \proc{Empty-Heap}()$
+		\li $x.\const{NIL}$
+		\li $x.child =\const{NIL}$
+		\li $x.sibling=\const{NIL}$
+		\li $x.degree=0$
+		\li $G.head=x$
+		\li $H=\proc{Binomial-Heap-Merge}$($H$, $G$)
+	\end{codebox}
+
+	\subsubsection{Уклањање чвора са најмањим кључем}
+	Најмањи чвор умемо лако да нађемо. Нека је биномно стабло чији корен уклањамо $B_k$. Уклањањем корена стабло постаје неповезано, али подстабла која остају су редом $B_{k-1}$, $B_{k-2}$, ..., $B_0$. Свако од тих стабала ћемо спојити са биномним хипом из чије листе корена уклањамо најмањи корен и на тај начин добити биномни хип без претходно нађеног најмањег чвора.
+
+	\begin{codebox}
+		\Procname {\proc{Binomial-Heap-Delete-Min}($H$)}
+		\li obrisati najmanji koren $x$ iz liste korena binomnog hipa $H$
+		\li $G=\proc{Make-Binomial-Heap}()$
+		\li preokrenuti listu dece korena $x$ i 
+		\zi \Do postaviti $G.head$ na prvo dete takve liste
+		\End
+		\li $H=\proc{Binomial-Heap-Merge}$($H$, $G$)
+    \end{codebox}
+
+	\indent Сам процес спајања подстабала са остатком хипа може да се посматра као спајање два биномна хипа са $n$ чворова, што има сложеност $O(\log n)$. Треба нам $O(\log n)$ времена да формирамо листу корена $G$, што нас доводи до укупне сложености $O(\log n)$.
+
+	\subsubsection{Смањивање кључа произвољног чвора}
+	Као и приликом смањивања чвора код хипа, чвор чији кључ смањујемо можда треба померити у биномном стаблу навише да би хип својство и даље важило. Функција која нам је потребна доста подсећа на истоимену функцију коју смо користили у прошлом поглављу. Идеја је иста, чвор подижемо уз стабло докле год или чвор не постане корен или родитељ има мањи кључ.
+	
+	\begin{codebox}
+		\Procname{\proc{Binomial-Heap-Decrease-Key}($H$, $x$, $val$)}
+		\li $x.key=val$
+		\li $p=x$
+		\li $q=p.parent$
+		\li \While $q \neq \const{NIL}$ and $p.key < q.key$
+		\li \Do
+		$p \leftrightarrow q$ \Comment \selectlanguage{russian}размена атрибута
+		\li $p=q$
+		\li $q=p.parent$
+		\End
+	\end{codebox}
+
+	\indent Како ће чвор у најгорем случају постати корен, сложеност функције \const{Binomial-Heap-Decrease-Key} износи $O(\log n)$.
+
+	\subsubsection{Уклањање произвољног чвора} Након што смо објаснили како се произвољан чвор умањује и како се брише један од корена биномног хипа, можемо да размотримо брисање произвољног елемента.
+	
+	\begin{codebox}
+		\Procname {\proc{Binomial-Heap-Delete-Node}($H$, $x$)}
+		\li \proc{Binomial-Heap-Decrease-Key}($H$, $x$, $-\infty$)
+		\li \proc{Binomial-Heap-Delete-Min}($H$)
+	\end{codebox}
+
+	\indent Идеја је да произвољан чвор начинимо кореном биномног стабла ком припада и то тако да у листи корена датог хипа буде најмањи чвор. Потом на већ описан начин бришемо најмањи чвор. Сложеност је очигледно $O(\log n)$.
+
+	\subsubsection{Иницијализација биномног хипа}
+	Наивна сложеност је $O(n \log n)$, јер биномни хип правимо тако што додајемо чвор по чвор и у сваком кораку спајамо већ постојећи хип са новим простим хипом $B_0$. Пажљивијом анализом се можемо уверити да је у питању ипак линеарно време [2]. \\
+	\indent Приметимо да је приликом спајања простог биномног хипа $B_0$ и било ког другог биномног хипа $B_k$ јако важно колико се пута генерише пренос током операције \const{Binomial-Heap-Merge}. Колико преноса има, толико има и позива функције \const{Binomial-Link} која формира сложеност иницијализације. Према томе, време које је потребно за иницијализацију хипа је пропорционално са бројем преноса који се генеришу током сукцесивног спајања почетно празног биномног хипа и простог биномног хипа $B_0$ тачно $n$ пута. \\
+	\indent Парни бројеви тривијално не генеришу пренос. Бројеви који се у бинарном запису завршавају на $01$ генеришу тачно један пренос, док бројеви који се завршавају на $011$ тачно два. Настављајући резоновање на овај начин, добијамо да је укупан број генерисаних преноса ограничен редом
+	\begin{equation*}
+	\sum_{k=0}^{\infty} k \cdot \frac{n}{2^{k+1}}=n.
+	\end{equation*}
+	\indent Следи да се појединачно додавање $n$ елемената у почетно празан биномни хип извршава за $O(n)$ времена.
+	
+	
+	\subsection{MST алгоритам употребом биномног хипа}
+	Поред Крушкаловог и Примовог алгоритма који су најпознатији MST алгоритми, представићемо алгоритам који користи биномне хипове. \\
+	
+	\noindent Нека је $G(V, E)$ повезан граф. Извршићемо партицију скупа $V$ на подскупове $V_i$, који иницијално садрже по један чвор. Сваки скуп $V_i$ генерише скуп $E_i$ у ком се налазе све оне гране којима је бар један чвор у $V_i$.
+	
+	\begin{codebox}
+		\Procname {\proc{Binomial-Heap-MST}($G$)}
+		\li $T=\emptyset$
+		\li \textbf{foreach} $v_i \in V[G]$
+		\li \Do $V_i=\{v_i\}$
+		\li $E_i=\{(v_i, v) \in E[G] \}$
+		\End
+		\li \While postoje bar dva skupa $V_i$
+		\li \Do biramo bilo koji $V_i$
+		\li \Do neka je $e$ minimalna grana $(u, v)$ iz $E_i$
+		\li neka je $u \in V_i$ i $v \in V_j$
+		\li \If $i \neq j$
+		\li \Do $T=T \cup \{e\}$
+		\li $V_i=V_i \cup V_j$
+		\li $E_i=E_i \cup E_j$
+		\End
+		\End
+		\End
+		\li \Return $T$
+	\end{codebox}
+
+	Сваки скуп $V_i$ можемо представити биномним хипом који је уређен према тежини грана скупа $E_i$. Свако спајање два скупа $V_i$ и $V_j$ представља спајање одговарајућих биномних хипова. Укупно ће се десити $n$ спајања хипова који укупно садрже $m$ грана. У сваком кораку \textbf{while} петље може доћи до потпуног пражњења хипа, па ћемо $O(m)$ пута морати да узимамо најмању грану. Према томе, овај алгоритам захтева $O(m \log n)$ времена.
+	
+	\newpage
+
+	\section{Фибоначијев хип}
+	
+	Фредман\footnote{Michael Fredman -- амерички информатичар.} и Тарџан\footnote{Robert Tarjan -- амерички информатичар. Добитник Тјурингове награде.} су 1984. године представили Фибоначијев хип, који је у потпуности заснован на амортизованој анализи [6]. Будући да је већина операција амортизовано константа, ова стурктура података се намеће као оптималан избор када се те операције форсирају.
+	
+	\subsection*{Потенцијални метод амортизоване анализе}
+	Приликом амортозиваног анализирања желимо да упросечимо време извршавања низа операција над неком структуром података. Користећи се овом врстом анализе можемо да утврдимо да је просечна сложеност операције мала, иако је таква операција у најгорем случају изразито неефикасна. \\
+	
+	\noindent Потенцијални метод је један од неколико могућих приступа амортизоване анализе. Потенцијал можемо схватити као ,,кредит'' којим можемо да платимо цену неке операције. Дефинисаћемо \textit{потенцијалну функцију} $\Phi : \mathbb{D} \rightarrow \mathbb{R}$ , где је $\mathbb{D}$ скуп свих могућих стања структуре података $D$. Вредност $\Phi (D_k)$ представља потенцијал структуре података $D$ после низа од $k$ операција. Дефинишемо \textit{амортизовану сложеност} $\hat{c_k}$ у односу на стварну сложеност операције $c_k$ као $\hat{c_k}=c_k+\Phi(D_k)-\Phi(D_{k-1})$. Амортизована сложеност операције је, дакле, стварна сложеност у збиру са променом потенцијала. \\
+	
+	\noindent  Сада можемо изразити укупну амортизовану сложеност низа од $n$ операција
+	\begin{equation}
+	\begin{split}
+		\sum_{k=1}^{n} \hat{c_k} &= \sum_{k=1}^{n} (c_k+\Delta \Phi_k) \\
+		&= \sum_{k=1}^{n} c_k + \Phi(D_n)-\Phi(D_0).
+	\end{split}
+	\end{equation}
+	
+	\subsection{Дефиниције и својства}
+	
+	\begin{definicija}
+		\normalfont
+		Фибоначијев хип је шума стабала у којима важи хип својство.
+	\end{definicija}
+	
+	\noindent Чворови су на сваком нивоу повезани двоструко повезаном циркуларном листом. Уз то, за сваки чвор памтимо његовог родитеља и једно од његове деце, уколико их има. Поред тога, важни су нам број деце сваког чвора као и да ли је том чвору одстрањено једно дете (чију ћемо употребну вредност увидети касније). Дакле, за сваки чвор имамо следеће атрибуте: \textit{left}, \textit{right}, \textit{parent}, \textit{child},\textit{degree} и \textit{mark}. Поред тога, чуваћемо показивач на најмањи чвор у \textit{H.min} као и број елемената у \textit{H.n}. Листу која повезује корене зовемо \textbf{листа корена}. \\
+	
+	\begin{figure} [H]
+		\renewcommand\figurename{Слика}
+		\begin{center}
+			\begin{tikzpicture} [level/.style={sibling distance = 3cm/#1,
+				level distance = 1cm}, every node/.append style={circle, draw=black, inner sep=0pt, minimum size=15pt}]
+			
+			\node [circle, fill=white] (c) {23}
+			;
+			
+			\node [circle, fill=white, right=7em of c] (t) {7}
+			;
+			
+			\node [circle, fill=white, right=15em of c] (b) {3}
+			child { node [circle, fill=black, below left=3em of b, text=white] {18} 
+				child { node[circle, fill=black, text=white] {39} }
+			}
+			child { node [circle, fill=white, below=1.65em of b] {52} }
+			child { node [circle, fill=white, below right=3em of b] {38} 
+				child { node [circle, fill=white] {41} }
+			}
+			;
+			
+			\node [circle, fill=white, right=8em of b] (m) {17}
+			child {	node[circle, fill=white] {30} }
+			;
+			
+			\node [circle, fill=white, right=17em of b] (a) {24}
+			child { node [circle, fill=black, below left=3em of a, text=white] {26}
+				child { node[circle, fill=white] {35} }
+			}
+			child { node [circle, fill=white, below=1.65em of a] {46} }
+			child [missing]
+			;
+			
+			\node [draw=none, rectangle, fill=white, above=1.8em of b] (rect) {\textit{H.min}}
+			;
+			
+			\draw [thin, dashed] (t.west) -- (c.east);
+			\draw [thin, dashed] (t.east) -- (b.west);
+			\draw [thin, dashed] (b.east) -- (m.west);
+			\draw [thin, dashed] (m.east) -- (a.west);
+			\draw [->, >=stealth, thick] (rect.south) -- ([yshift=1.5mm]b.north);
+			%%\draw [-{stealth}, thin] (a.west) -- (b.east);
+			%%\draw [->, thin] (c.east) -- (b.west);
+			\end{tikzpicture}
+			\caption{Фибоначијев хип у ком су кључеви природни бројеви. Црни чворови су маркирани.}
+		\end{center}
+	\end{figure}
+
+	Како за сваки чвор чувамо $O(1)$ атрибута, меморијска сложеност Фибоначијевог хипа је $O(n)$, где је $n$ број чворова у стаблу. \\
+
+	\noindent Потенцијална функција коју ћемо користити за анализу Фибоначијевог хипа \textit{H} је
+		
+	\begin{equation}
+		\Phi(H)=t(H)+2m(H),
+	\end{equation}
+	где је \textit{t(H)} број стабала, а \textit{m(H)} број маркираних чворова у хипу. Укупан потенцијал скупа Фибоначијевих хипова је једнак збиру појединачних потенцијала. Како је потенцијал празног Фибоначијевог хипа $0$, а потенцијална функција увек ненегативна, време извршавања сваке операције можемо ограничити одозго. Сматрамо да је јединица потенцијала довољно велика да покрије трошак било ког дела операције који се извршава за константно време. \\
+
+	\noindent Како нам је у анализи операција јако битан највећи степен који чвор може да има, означићемо са $D(n)$ ту вредност за хип од $n$ чворова. Касније ћемо показати да је $D(n)=O(\log n)$.
+	
+	\subsection{Подржане операције}
+	
+	Операције спајања над Фибоначијевим хипом одлажу промене што је више могуће. Теоретски, могуће је да сви чворови буду у појединачним стаблима. Кључне операције које постижу ефикасност ове структуре су операције уклањања најмањег чвора и смањивања кључа произвољног чвора, па ћемо им се највише посветити.
+	
+	\subsubsection{Проналазак чвора са најмањим кључем}
+	
+	Како већ чувамо показивач на најмањи чвор, његов проналазак захтева $O(1)$ времена. С обзиром да се потенцијал није променио, амортизована сложеност такође износи $O(1)$.	
+	\begin{codebox}
+		\Procname{\proc{Fib-Heap-Find-Min}($H$)}
+		\li \Return $H.min$
+	\end{codebox}
+	
+	\subsubsection{Додавање новог чвора}
+	\noindent Поступак додавања новог чвора је врло једноставан, будући да само додајемо нови елемент у листу корена. Како је нови чвор можда мањи од најмањег, потребно је да и то проверимо. 
+	
+	\begin{codebox}
+		\Procname {\proc{Fib-Heap-Insert}($H$, $x$)}
+		\li $x.degree=0$
+		\li $x.parent=\const{NIL}$
+		\li $x.child=\const{NIL}$
+		\li $x.mark=\const{FALSE}$
+		\li \If $H.min==\const{NIL}$
+		\li \Do nova lista korena za $H$ u kojoj je samo $x$
+		\li $H.min=x$
+		\End
+		\li \Else dodaj $x$ u listu korena od $H$
+		\li \Do \If $x.key<H.min.key$
+		\li \Do $H.min=x$
+		\End \End
+		\li $H.n=H.n+1$
+	\end{codebox}
+
+	\noindent Нека је $H'$ хип који настаје после додатог чвора. Тада је $t(H')=t(H)+1$ и $m(H)=m(H')$, па је промена потенцијала после функције \proc{Fib-Heap-Insert}	
+	\begin{equation}
+	\Delta \Phi (H)=((t(H)+1)+2m(H)-(t(H)+2m(H))=1.
+	\end{equation}
+	
+	\noindent Aмортизована сложеност функције \proc{Fib-Heap-Insert} је $O(1)+1=O(1)$, јер је сложеност $O(1)$.
+
+	\subsubsection{Спајање два Фибоначијева хипа}
+	
+	Листе корена хипа $H_1$ и $H_2$ спајамо у нову листу корена $H$ чиме формирамо нови хип. Како листе корена хипова $H_1$ и $H_2$ више нећемо користити, уништавамо их да би ослободили заузету меморију.
+	
+	\begin{codebox}
+		\Procname {\proc{Fib-Heap-Merge}($H_1$, $H_2$)}
+		\li $H=\proc{Make-Fib-Heap}()$
+		\li $H.min=H_1 .min$
+		\li spajanje liste korena hipova $H_1$ i $H_2$
+		\li \If ($H_1 .min==\const{NIL})$ or ($H_2 .min \neq \const{NIL}$ and $H_2 .min.key<H_1 .min.key$)
+		\li \Do $H.min=H_2 .min$
+		\End
+		\li $H.n=H_1 .n+ H_2 .n$
+		\li \Return $H$
+	\end{codebox}
+
+	\noindent Промена потенцијала је	
+	\begin{equation}
+	\begin{split}
+		\Delta \Phi (H) & =\Phi (H)-(\Phi (H_1) - \Phi (H_2)) \\
+		& = (t(H)+2m(H))-((t(H_1)+2m(H_1))+(t(H_2)+2m(H_2))) \\
+		& = 0,
+	\end{split}
+	\end{equation}
+	
+	\noindent јер је $t(H)=t(H_1)+t(H_2)$ и $m(H)=m(H_1)+m(H_2)$. Према томе, амортизована сложеност функције \proc{Fib-Heap-Мerge} је $O(1)$.
+	
+	\subsubsection{Уклањање чвора са најмањим кључем}
+	
+	Као што је већ речено, ова операција је јако важна. Уклањањем најмањег чвора ажурирамо све потребне атрибуте листе корена, али показиваче самог чвора не мењамо. \\
+	
+	\noindent Будући да имамо показивач на најмањи чвор, најмањи чвор можемо да уклонимо из листе корена у $O(1)$. Затим, сву децу најмањег чвора одвајамо од њега и додајемо у листу корена, чиме се листа корена увећава за највише $D(n)$ стабала. Потом ћемо консолидовати преостала стабла тако што два стабла спајамо у једно стабло у случају да су истог степена. Нови корен је корен оног стабла који је мањи, а његово дете постаје и корен стабла који је већи. На крају је неопходно да ажурирамо показивач на најмањи чвор.
+	
+	\begin{codebox}
+		\Procname{\proc{Fib-Heap-Delete-Min}($H$)}
+		\li $z=H.min$
+		\li \If $z \neq \const{NIL}$
+		\li \Do \For za svako dete $x$ čvora $z$
+		\li \Do dodaj $x$ u listu korena hipa $H$
+		\li $x.p=\const{NIL}$
+		\End
+		\li ukloni $z$ is liste korena hipa $H$
+		\li \If $z==z.right$
+		\li \Do $H.min=\const{NIL}$
+		\li \Else $H.min=z.right$
+		\li \Do \proc{Consolidate}($H$)
+		\End \End
+		\li $H.n=H.n-1$
+		\End
+		\li \Return $z$
+	\end{codebox}
+
+	\begin{codebox}
+		\Procname{\proc{Consolidate}($H$)}
+		\li $A[0..D(H.n)]$ \Comment \selectlanguage{russian}низ који чува показиваче на стабла различитих степена
+		\li \For $i=0$ \To $D(H.n)$
+		\li \Do $A[i]=\const{NIL}$
+		\End
+		\li \For za svaki čvor $w$ u listi korena hipa $H$
+		\li \Do $x=w$
+		\li $d=x.degree$
+		\li \While $A[d] \neq \const{NIL}$
+		\li \Do $y=A[d]$ \Comment \selectlanguage{russian} постоји чвор (стабло) истог степена као и $x$
+		\li \If $x.key > y.key$
+		\li \Do $x \leftrightarrow y$ \Comment razmena atributa $x$ i $y$
+		\End
+		\li \proc{Fib-Heap-Link}($H$, $y$, $x$)
+		\li $A[d]=\const{NIL}$
+		\li $d=d+1$
+		\End
+		\li $A[d]=x$
+		\End
+		\li $H.min=\const{NIL}$
+		\li \For $i=0$ \To $D(H.n)$
+		\li \Do \If $A[i] \neq \const{NIL}$
+		\li \Do \If $H.min==\const{NIL}$
+		\li \Do napravi listu korena hipa $H$ u kojoj je samo $A[i]$
+		\li $H.min=A[i]$
+		\li \Else dodaj $A[i]$ u listu korena hipa $H$
+		\li \If $A[i].key<H.min.key$
+		\li \Do $H.min=A[i]$
+	\end{codebox}
+
+	\begin{codebox}
+		\Procname{\proc{Fib-Heap-Link}($H$, $y$, $x$)}
+		\li ukloni $y$ iz liste korena hipa $H$
+		\li $y$ postaje dete čvora $x$
+		\li $x.degree=x.degree+1$
+		\li $y.mark=\const{FALSE}$
+	\end{codebox}
+
+	\noindent Навели смо и помоћну функцију \proc{Fib-Heap-Link} која један чвор поставља за родитеља другог чвора. \\
+	
+	\noindent Осврнућемо се на функцију \proc{Consolidate}. Поменута функција нам служи да два стабла из листе корена која су истог степена спојимо у једно стабло. Поступак понављамо докле год постоје бар два таква стабла. Да би показали ваљаност ове операције, потребно је да анализирамо \textbf{while} петљу у линијама $7-14$. \\
+	
+	\indent \textbf{Инваријанта петље: } На почетку сваке итерације \textbf{while} петље је $d=x.degree$. \\
+	
+	\noindent У линији $6$ осигуравамо да ће по уласку у петљу инваријанта важити. У свакој итерацији \textbf{while} петље, $A[d]$ показује на неки корен $y$. Како је $d=x.degree=y.degree$, спајамо $x$ и $y$. Који год чвор да има мањи кључ постаје нови корен. Позив функције \proc{Fib-Heap-Link} у линији $11$ увећава степен чвора $x$ за $1$, али не мења $y.degree$. Како $y$ више није корен, уклањамо показивач на $y$ из низа $A$ у линији $12$. Како је степен чвора $x$ увећан, увећавамо и вредност $d$ за један, чиме враћамо инваријанту. Понављамо \textbf{while} петљу све до $A[d]=\const{NIL}$, када више не постоји нити један чвор са истим степеном као и чвор $x$. \\
+	
+	\noindent Издвајање деце најмањег чвора захтева $O(D(n))$ времена, као и реконструкција листе корена јер су сви чворови различитог степена. Остаје да се утврди колика је сложеност \textbf{for} петље у линијама $4-14$. Применићемо агрегатну анализу. Не знамо колика је тачна сложеност једне итерације, али знамо да свака итерација \textbf{while} петље умањује број корена из листе корена за $1$, што значи да је укупан број итерација \textbf{while} петље $D(n)+t(H)$. Према томе, сложеност уклањања најмањег чвора је $O(D(n)+t(H))$. \\
+	\indent Потенцијал пре уклањања најмањег чвора износи $t(H)+2m(H)$, а после уклањања највише $(D(n)+1)+2m(H)$, јер највише $D(n)+1$ чворова може остати у листи корена. Амортизована сложеност функције \proc{Fib-Heap-Delete-Min} је	
+	\begin{equation}
+		\begin{split}
+		O(D(n) &+ t(H))+((D(n)+1)+2m(H))-(t(H)+2m(H)) \\
+		&= O(D(n))+O(t(H))-t(H) \\
+		&= O(D(n)),
+		\end{split}
+	\end{equation}
+	
+	\noindent јер можемо да увећамо вредност потенцијала колико је потребно да анулирамо константу \mbox{иза $O(t(H))$.}
+	
+	\subsubsection{Смањивање кључа произвољног чвора}
+	
+	Као и до сад, сматрамо да су структурни атрибути чвора који је уклољен непромењени. Користићемо две нове функције \proc{Cut} и \proc{Cascading-Cut} које ћемо после објаснити.
+	
+	\begin{codebox}
+		\Procname{\proc{Fib-Heap-Delete-Min}($H$, $x$, $k$)}
+		\zi \Comment $k<x.key$
+		\li $x.key=k$
+		\li $y=x.p$
+		\li \If $y \neq \const{NIL}$ and $x.key<y.key$
+		\li \Do \proc{Cut}($H$, $x$, $y$)
+		\li \proc{Cascading-Cut}($H$, $y$)
+		\End
+		\li \If $x.key<H.min.key$
+		\li \Do $H.min=x$
+		\End
+	\end{codebox}
+
+	\begin{codebox}
+		\Procname{\proc{Cut}($H$, $x$, $y$)}
+		\li ukloni $x$ iz liste dece čvora $y$, umanjujući $y.degree$
+		\li dodaj $x$ u listu korena hipa $H$
+		\li $x.p=\const{NIL}$
+		\li $x.mark=\const{FALSE}$
+	\end{codebox}
+	
+	\begin{codebox}
+		\Procname{\proc{Cascading-Cut}($H$, $y$)}
+		\li $z=y.p$
+		\li \If $z \neq \const{NIL}$
+		\li \Do \If $y.mark==\const{FALSE}$
+		\li \Do $y.mark=\const{TRUE}$
+		\End
+		\li \Do \Else \proc{Cut}($H$, $y$, $z$)
+		\li \proc{Cascading-Cut} ($H$, $z$)
+		\End
+	\end{codebox}
+
+	\noindent Уколико нови кључ наруши хип својство, мора доћи до извесних промена. Почињемо уклањањем чвора $x$ из листе деце његовог родитеља, постављајући $x$ за нови корен. Тај део обавља функција \proc{Cut}. \\
+	
+	\indent Приликом ажурирања хипа, од кључног значаја је атрибут \textit{mark}. Помоћу поменутог атрибута, имамо увид у следеће догађаје:
+	
+	\begin{enumerate}
+		\item у неком тренутку, чвор $x$ је постао корен,
+		\item чвор $x$ је постао неком другом чвору дете,
+		\item чвору $x$ су одстрањена два детета.
+	\end{enumerate}
+
+	\noindent Чим се чвору одстране два детета, уклањамо га из листе деце његовог корена и постављамо за нови корен. \\
+	\indent Родитељу чвора $x$ је уклањање тог чвора можда друго уклањање детета, услед чега и тог родитеља морамо поставити за нови корен. За то нам служи функција \proc{Cascading-Cut}. Она ће се пењати до корена и уклонити потребне чворове, а чим наиђе на чвор коме ни једно дете није уклољено, маркира га и стаје. На крају је потребно проверити да ли је нови кључ мањи од тренутно најмањег. \\
+	
+	\noindent Време извршавања функције \proc{Fib-Heap-Decrease-Key} је $O(1)$ не рачунајући сложеност резова. Претпоставимо да је укупан број позива функције \proc{Cascading-Cut} тачно $c$. Сваки позив те функције захтева $O(1)$ времена, према томе укупно време за све каскадне резове је $O(c)$. \\
+	\indent Остаје нам да израчунамо промену потенцијала. Нека је $H$ хип пре смањивања кључа. Први позив функције \proc{Cut} можда мења $x.mark$ и поставља чвор $x$ за нови корен. Сваки каскадни рез, осим последњег, одстрањује чвор и поставља његов $mark$ атрибут на \const{FALSE}. На крају хип има $t(H)+c$ корена у листи корена и највише $m(H)-c+2$ маркираних чворова. Дакле, промена потенцијала је
+	\begin{equation}
+		\Delta \Phi(H)=((t(H)+c)+2m(H)-c+2))-(t(H)+2m(H))=4-c.
+	\end{equation}
+	
+	Према томе, аморизована сложеност функције \proc{Fib-Heap-Decrease-Key} износи
+	\begin{equation}
+		O(c)+4-c=O(1),
+	\end{equation}
+	
+	\noindent јер можемо да скалирамо вредност потенцијала колико нам је потребно да би поништили утицај константе иза $O(c)$.
+	
+	\subsubsection{Уклањање произвољног чвора}
+	
+	Као и до сада, ова операција подразумева смањивање кључа до најмање вредности, а онда и уклањање најмањег чвора.
+	
+	\begin{codebox}
+		\Procname{\proc{Fib-Heap-Delete-Node}($H$, $x)$}
+		\li \proc{Fib-Heap-Decrease-Key}($H$, $x$, $-\infty$)
+		\li \proc{Fib-Heap-Delete-Min}($H$)
+	\end{codebox}
+
+	\noindent Амортизована сложеност ове функције је очигледно $O(D(n))$.
+	
+	\subsection{Горње ограничење највећег степена}
+	
+	Показаћемо да је $D(n) \leq \lfloor \log_\phi n \rfloor$, где је $\phi$ златни пресек. Уводимо ознаку $size(x)$ за број чворова у стаблу са кореном $x$ укључујући и $x$. \\
+	
+	\begin{teorema}
+		\normalfont
+		За Фибоначијев хип од $n$ чворова важи $D(n)=O(\log n)$.
+	\end{teorema}
+
+	\begin{dokaz}
+		\normalfont
+		Прво ћемо доказати неколико лема, које су нам неопходне да комплетирамо доказ.
+	
+	\begin{lema}
+		\normalfont
+		Нека је $x$ чвор Фибоначијевог хипа и нека је $x.degree=k$. Нека су $y_1, y_2, ..., y_k$ деца тог чвора оним редом којим су постали његова деца. Тада важи да је $y_1 .degree \geq 0$ и $y_i .degree \geq i-2$ за $i=2, 3, ...k$.
+	\end{lema}
+
+	\begin{dokaz}
+		Очигледно је $y_1 .degree \geq 0$. За $i \geq 2$, када $y_i$ постане дете чвора $x$, тада су чворови $y_1, y_2, ..., y_{i-1}$ већ његова деца, па мора бити $y_i .degree=i-1$, да би их функција \proc{Consolidate} спојила. Чвор $y_i$ је од тад изгубио највише једно дете, јер би у случају да је игубио два био уклоњен из подстабла чвора $x$ каскадним резом. Дакле, $y_i .degree \geq i-2$. \qed \\
+	\end{dokaz}
+
+	\noindent Фибоначијев број $F_k$ ћемо дефинисати рекурентном везом $F_k=F_{k-1}+F_{k-2}$, за $k \geq 2$, док је $F_0=0, F_1=1$.
+	
+	\begin{lema}
+		\normalfont
+		За сваки цео број $k \geq 0$, важи да је $F_{k+2}=1+\sum_{i=0}^{k}F_i$.
+	\end{lema}
+	
+	\begin{dokaz}
+		Користићемо се математичком индукцијом по $k$. За $k=0$ je		
+		\begin{equation}
+			\begin{split}
+			1+\sum_{i=0}^{0} &= 1+F_0 \\
+			&= 1+0 \\
+			&= F2.
+			\end{split}
+		\end{equation}
+		
+		\indent За индуктивни корак имамо да је $F_{k+1}=1+\sum_{i=0}^{k-1}F_i$, из чега следи		
+		\begin{equation}
+			\begin{split}
+				F_{k+2} &= F_k + F_{k+1} \\
+				&= F_k + \left (1+ \sum_{i=0}^{k-1}F_i \right) \\
+				&= 1+\sum_{i=0}^{k}F_i.
+			\end{split}
+		\end{equation}
+		\qed
+	\end{dokaz}
+	
+	\begin{lema}
+		\normalfont
+		За сваки цео број $k \geq 0$, важи да је $F_{k+2} \geq \phi^{k}$.
+	\end{lema}
+
+	\begin{dokaz}
+		Користићемо се математичком индукцијом корака $2$ по $k$. База индукције је $F_2=\phi^{0}$, $F_3=2>1.619>\phi^{1}$. Индуктивни корак је за $k \geq 2$ и према индуктивној претпоставци имамо да је $F_{k+1} \geq \phi^{k-1}$ и $F_{k} \geq \phi^{k-2}$. Одатле следи		
+		\begin{equation}
+		\begin{split}
+			F_{k+2} &= F_{k+1}+F_k \\
+			& \geq \phi^{k-1}+\phi^{k-2} \\
+			&= \phi^{k-2}(\phi+1) \\
+			&= \phi^{k-2} \cdot \phi^{2} \\
+			&= \phi^{k}.
+		\end{split}
+		\end{equation}
+		\qed
+	\end{dokaz}
+
+	\begin{lema}
+		\normalfont
+		Нека је $x$ чвор Фибоначијевог хипа и нека је $x.degree=k$. Тада је \mbox{$size(x) \geq F_{k+2} \geq \phi^{k}$}.
+	\end{lema}
+
+	\begin{dokaz}
+		Нека је $s_k$ најмања величина стабла неког чвора са степеном $k$ у неком Фибоначијевом хипу. Тривијално је $s_0=1$ и $s_1=2$. Број $s_k$ је највише $size(x)$, а како додавање новог детета увећава величину подстабла, вредност $s_k$ строго монотоно расте. Посматрајмо неки чвор $z$, у неком Фибоначијевом хипу, тако да је $z.degree=k$ и $size(z)=s_k$. Како је $s_k \leq size(x)$, доње ограничење $s_k$ је и доње ограничење $size(x)$. Као и у леми $5.3.1$, нека су $y_1, y_2, ...y_k$ деца чвора $z$ оним редом којим су постала његова деца. Тада, уз лему $5.3.1$, имамо
+		\begin{equation}
+			\begin{split}
+			size(x) & \geq s_k \\
+			& \geq 2+\sum_{i=2}^{k}s_{y_i .degree} \\
+			& \geq 2+ \sum_{i-2}^{k}s_{i-2},
+			\end{split}
+		\end{equation}
+		
+		\indent Сада ћемо трансфинитном индукцијом [3] по $k$ показати да је $s_k \geq F_{k+2}$, за сваки ненегативан цео број $k$. База је за $k=0$ и $k=1$ тривијална. За индуктивни корак имамо да је $s_i \geq F_{i+2}$ за $i=0, 1, ..., k-1$. Важи да је
+			\begin{equation}
+			\begin{split}
+			s_k & \geq 2+ \sum_{i=2}^{k} s_{i-2} \\
+			& \geq 2+\sum_{i=2}^{k}F_i \\
+			&= 1+\sum_{i=0}^{k}F_i \\
+			&=F_{k+2} \\
+			& \geq \phi^{k}.
+			\end{split}
+		\end{equation}
+		\qed \\
+	\end{dokaz}
+
+	Нека је $x$ чвор у Фибоначијевом хипу са $n$ чворова, и нека је $x.degree=k$. Према леми $5.3.4.$ важи $n \geq size(x) \geq \phi^{k}$. Логаритмујући ову неједнакост, добијамо $k \leq \log_\phi n$, а како је $k$ цео број, важи да је $k \leq \lfloor \log_\phi n \rfloor$. Одатле следи да је $D(n)=O(\log n)$. \qed
+	\end{dokaz}
+	
+	\newpage
+	
+	\section{Стабло бинарне претраге}
+	
+	Стабло бинарне претраге је структура података која омогућава ефикасне операције над динамичким скупом података. Група научника\footnote{P.F. Windley, A.D. Booth, A.J.T. Colin, и T.N. Hibbard} је 1960. године представила ову врсту \mbox{стабала [8]}.
+	
+	\subsection{Дефиниције и својства}
+	
+	\begin{definicija}
+		\normalfont
+		Стабло бинарне претраге је или празно стабло или бинарно стабло за чији корен важи да је лево подстабло стабло бинарне претраге са мањим кључевима, а десно подстабло стабло бинарне претраге са већим кључевима.
+	\end{definicija}
+
+	Стабло бинарне претраге се лако може представити као повезана структура у којој се у сваком чвору налазе показивачи ка левом и десном детету, као и родитељу.
+	
+	\indent Атрибути $left$, $right$, $p$, $key$ означавају редом лево дете, десно дете, родитеља и вредност чвора. Висину стабла означавамо са $h$. \\
+	\indent Будући да за сваки чвор чувамо $O(1)$ атрибута, меморијска сложеност стабла бинарне претраге је $O(n)$, где је $n$ број чворова у стаблу.  \\
+	
+	\begin{figure} [H]
+		\renewcommand\figurename{Слика}
+		\begin{center}
+		\begin{tikzpicture} [level/.style={text centered, align=center, sibling distance=2.5cm/#1, level distance=1.2cm}, every node/.style={draw=black, circle, thick, inner sep=0pt, minimum size=6mm}]
+		
+		\node (root) {5}
+		child {node (v1) {3}
+			child [missing]
+			child {node (v2) {4}}
+		}
+		child {node (v2) {7}
+			child {node (v3) {6}}
+			child {node (v4) {12}
+				child [missing]
+				child {node (v5) {15}}
+			}
+		};
+		
+		
+		\end{tikzpicture}
+		\caption{Бинарно стабло претраге у ком су кључеви природни бројеви}
+		\end{center}
+	\end{figure}
+	
+	\subsection{Подржане операције}
+	
+	Анализа сложености свих операција у великој мери зависи од висине самог стабла, због чега су Стабла бинарне претраге у својој основној варијанти ретко кад употребљива, али представљају основу за многе друге структуре података. Када је бинарно стабло комплетно тада су операције ефикасне, али како стабло може имати и форму ланца, сложености ћемо изражавати у односу на висину стабла.
+	
+	\subsubsection{Проналазак чвора са најмањим кључем}
+	Дефиниција Стабла бинарне претраге нам дозвољава да се лако ,,позиционирамо'' у стаблу. Како се у левом подстаблу налазе мањи чворови, искључиво ћемо ићи у лево подстабло. Последњи чвор на том путу је најмањи чвор.
+	
+	\begin{codebox}
+		\Procname {\proc{BST-Find-Min}($x$)}
+		\li \If $x.left==\const{NIL}$
+		\li \Do \Return $x$
+		\End
+		\li \Return \proc{BST-Find-Min}($x.left$)		
+	\end{codebox}
+
+	Како се у најгорем случају спуштамо за целу висину стабла, сложеност функције \proc{Find-Min} је $O(h)$. \\
+	
+	\noindent Приметимо да нам ова функција може послужити за проналазак следбеника неког чвора, уколико тај чвор има десно подстабло. Следбеник је чвор који је по вредности први после вредности чвора чији следбеник тражимо. Сви чворови који су кандидати за следбеника су у његовом десном подстаблу, а најмањи од њих је заправо најмањи чвор десног подстабла који је уједно и следбеник. Уколико чвор нема десно подстабло, тада је следбеник
+	
+	\subsubsection{Проналазак чвора одређене вредности}
+	Посматрајмо неки чвор који није лист. У његовом десном подстаблу су сви они чворови који имају већу вредност од њега, као што се у левом подстаблу налазе сви они чворови који имају мању вредност. Зато, када тражимо чвор са неком вредношћу, у случају да тренутни чвор нема тражену вредност, претрагу настављамо у тачно једном подстаблу тог чвора.
+	
+	\begin{codebox}
+		\Procname{\proc{BST-Search}($x$, $val$)}
+		\li \If $x == \const{NIL}$ or $\attrib{x}{key} == val$
+		\li \Do \Return $x$
+		\End
+		\li \If $val < \attrib{x}{key}$
+		\li \Do \Return \proc{BST-Search}($\attrib{x}{left}$, $val$)
+		\End
+		\li \Else \Return \proc{BST-Search}($\attrib{x}{right}$, $val$)
+	\end{codebox}
+
+	Како у сваком кораку смањујемо висину подстабла на ком се налазимо, у најгорем случају ћемо проћи целом висином стабла па сложеност функције \proc{BST-Search} износи $O(h)$.
+	
+	\subsubsection{Додавање новог чвора}
+	Чвор који се додаје ће постати лист стабла. Његову позицију ћемо врло лако наћи користећи се дефиницијом.
+	
+	\begin{codebox}
+		\Procname {\proc{BST-Insert}($x$, $v$)}
+		\li \If $val < x.key$ and $x.right \neq \const{NIL}$
+		\li \Do $x.right=v$
+		\li $v.parent=x$
+		\End
+		\li \Else \If $val < x.key$
+		\li \Do \proc{BST-Insert}($x.right$, $v$)
+		\End
+		\li \Else \If $x.left \neq \const{NIL}$
+		\li \Do $x.left=v$
+		\li $v.parent=x$
+		\End
+		\li \Else \proc{BST-Insert}($x.left$, $v$)
+	\end{codebox}
+	
+	Како се у сваком кораку спуштамо у подстабло мање висине, најгори случај подразумева да се спустимо низ целу висину стабла па функција \proc{BST-Insert} захтева $O(h)$ времена.
+	
+	\subsubsection{Уклањање произвољног чвора} 
+	Уклањање чвора $x$ из стабла бинарне претраге има три могућа случаја:
+		\begin{itemize}
+		\item Ако чвор $x$ нема деце, тада уместо да његов родитељ показује на чвор $x$ као дете, сада показује на \const{NIL}.
+		\item Ако чвор $x$ има једно дете, тада је довољно заменити места чвора $x$ и његовог детета.
+		\item Ако чвор $x$ има два детета, тада чвор $x$ мењамо са његовим следбеником, што може бити проблематично уколико следбеник није десно дете чвора $x$.
+	\end{itemize}
+
+	\noindent Ради олакшања брисања чвора, увешћемо функцију \proc{Transplant} која уместо једног подстабла поставља друго, односно на место једног чвора ставља други. Оваква функција очигледно захтева $O(1)$ времена.
+	
+	\begin{codebox}
+		\Procname {\proc{Transplant}($u$, $v$)}
+		\li \If $u.p==\const{NIL}$
+		\li \Do \Return
+		\End
+		\li \If $u==(u.p).left$
+		\li \Do  $(u.p).left=v$
+		\End
+		\li \Else $(u.p).right=v$
+		\li \If $v \neq \const{NIL}$
+		\li \Do $v.p=u.p$
+		\End
+	\end{codebox}
+
+	\noindent Сада се операција уклањања чвора $x$ извршава на следећи начин:
+	\begin{itemize}
+		\item Ако чвор $x$ нема лево дете, тада чвор $x$ мењамо са његовим десним дететом, које можда постоји, а можда и не. Ако не постоји тиме смо решили случај када чвор $x$ нема децу, а ако постоји тада смо решили сучај када има само једно дете и то десно.
+		\item Ако чвор $x$ има само једно дете и то лево, тада чвор $x$ мењамо са левим дететом.
+		\item Иначе, чвор $x$ има два детета. Тада налазимо следбеника чвора $x$ који се налази у његовом десном подстаблу и сигурно нема лево дете. Нека је следбеник $y$.
+			\begin{itemize}
+				\item Ако је чвор $y$ десно дете чвора $x$, тада мењамо та два чвора.
+				\item Ако чвор $y$ није десно дете чвора $x$, тада $y$ мењамо са његовим десним дететом, затим га постављамо на место родитеља десног детета чвора $x$, а потом мењамо $x$ и $y$.
+			\end{itemize}
+	\end{itemize}
+	
+	\begin{codebox}
+		\Procname{\proc{BST-Delete}($x$)}
+		\li \If $x.left == \const{NIL}$
+		\li \Do \proc{Transplant}($x$, $x.right$)
+		\End
+		\li \Else \If $x.right==\const{NIL}$
+		\li \Do \proc{Transplant}($x$, $x.left$)
+		\End
+		\li \Else $y=\proc{BST-Min}$($x.right$)
+		\li \Do \If $y.parent \neq x$
+		\li \Do \proc{Transplant}($x$, $y$)
+		\li $y.right=x.right$
+		\li $(y.right).p=y$
+		\End
+		\li \proc{Transplant}($x$, $y$)
+		\li $y.left=x.left$
+		\li $(y.left).p=y$
+		\End
+	\end{codebox}
+
+	\indent Како нам за проналажење следбеника треба $O(h)$ времена, а све остале операције су $O(1)$, закључујемо да нам за уклањање чвора из бинарног стабла претраге треба $O(h)$ времена.
+	
+	\subsubsection{Иницијализација стабла бинарне претраге}
+	Почетно стабло је празно, а ми додајемо укупно $n$ чворова. Распоред додавања чворова може произвести дегенеративну форму стабла, па наивна сложеност износи $O(n^2)$. \\
+	
+	\indent Нека је $n$ кључева организовано у низ. Да ли би умели ефикасније да изградимо стабло ако би тај низ био сортиран? Нама је у интересу да стабло буде балансирано, јер је оно тада оптималне висине. Ако би корен имао вредност која заузима средишњу позицију у низу кључева, тада би се величине левог и десног подстабла разликовале за највише $1$, чиме постижемо балансираност. Да би стабло начинили стаблом бинарне претраге, лево подстабло ћемо изградити од кључева мањих од корена, десно подстабло од већих. Према томе, стабло ћемо изградити одозго на доле, тако да чворови узимају средишњи елемент одговарајућих поднизова низа кључева. \\
+	\indent Користићемо и помоћну функцију \proc{BST-Empty-Node} која прави нов, празан чвор стабла бинарне претраге. 
+	
+	\begin{codebox}
+		\Procname{\proc{BST-Init}($x$, $a$, $L$, $R$)}
+		\li $MID=(L+R)/2$
+		\li $x.key=a[MID]$
+		\li \If $L \leq MID-1$
+		\li \Do $x.left=\proc{BST-Empty-Node}()$
+		\li \proc{BST-Init}($x.left$, $a$, $L$, $MID-1$)
+		\End
+		\li \If $MID+1 \leq R$
+		\li \Do $x.right=\proc{BST-Empty-Node}()$
+		\li \proc{BST-Init}($x.right$, $a$, $MID+1$, $R$)
+		\End
+		\li \Return $x$
+	\end{codebox}
+	
+	\indent Како ћемо сваки чвор посетити тачно једном, јасно је да функција \proc{BST-Init} захтева $O(n)$ времена. Сортирање низа кључева троши $O(n \log n)$, па је укупна сложеност $O(n \log n)$. Иницијализација се може извршити у сложености $O(n)$ ако су испуњени услови за примену неког линеарног алгоритма сортирања, или ако је низ кључева већ сортиран.
+	
+	\subsubsection{Спајање два стабла бинарне претраге}
+	
+	Желимо да искористимо ефикасну операцију иницијализације стабла бинарне претраге. Ако би успели ефикасно да организујемо кључеве стабала, можемо ефикасно да их спојимо. \\
+	
+	\indent Приметимо да чворове стабла бинарне претраге можемо добити у сортираном поретку само једним пролазом кроз стабло, што можемо за линеарно време. Кренимо од корена стабла. Знамо да су сви чворови у левом подстаблу мањи, и они у сортираном низу кључева заузимају мању позицију од корена. Зато ћемо корен да поставимо на прву слободну позицију после постављених чворова левог подстабла. Десно подстабло садржи све веће чворове од корена, па сви ти чворови морају да буду после корена у сортираном низу кључева. Закључујемо да смо корен поставили на право место. Обилазећи чворове на описани, рекурзиван, начин, стабло обилазимо у \textit{in-order} поретку, што значи да сортиран низ кључева стабла добијамо за време $O(n)$. \\
+	\indent Како су оба низа кључева сортирани, њихово спајање у сортиран низ захтева $O(n+m)$ времена, где су $n$ и $m$ број чворова стабала. Потом, већ описаним поступком, градимо стабло бинарне претраге које садржи кључеве оба стабла. Према томе, спајање два стабла бинарне претраге захтева $O(n+m)$ времена. \\
+	\indent Ради лакше имплементације, користићемо динамички низ за чување кључева стабала.
+	
+	\begin{codebox}
+		\Procname {\proc{BST-In-Order}($x$)}
+		\li $ret=\emptyset$
+		\li \If $x.left \neq \const{NIL}$
+		\li \Do $ret=\proc{BST-In-Order}$($x.left$)
+		\End
+		\li $ret.\func{push}(x.key)$
+		\li \If $x.right \neq \const{NIL}$
+		\li \Do $ret=ret+\proc{BST-In-Order}(x.right)$
+		\End
+		\li \Return $ret$
+	\end{codebox}
+	
+	\begin{codebox}
+		\Procname {\proc{BST-Merge}($x$, $y$)}
+		\li $a=\proc{BST-In-Order}(x)$
+		\li $b=\proc{BST-In-Order}(y)$
+		\li $c=\proc{Merge}$($a$, $b$) \Comment{\selectlanguage{russian}спајање два сортирана низа у један}
+		\li $root=\proc{BST-Empty-Node}()$
+		\li \Return \proc{BST-Init}($root$)
+	\end{codebox}
+	
+	\subsection{Очекивана висина стабла бинарне претраге}
+	Показали смо да се све основне операције над стаблом бинарне претраге извршавају за време $O(h)$. Али како висина стабла може да се мења уклањањем или додавањем чворова, потребно је да проценимо висину бинарног стабла претраге у општем сучају. \\
+	\indent У најгорем случају, сви чворови се могу налазити на једном путу, што би се десило када би $n$ кључева додавали у растућем поретку у почетно празно стабло. Други дегенеративни случајеви су путеви који вијугају лево или десно код неких унутрашњих чворова. Дакле, проблем нам праве случајеви када је висина стабла $\Theta (n)$. \\
+	\indent Највише би нам одговарало да је стабло комплетно бинарно стабло. Тада је висина $\log n$ па су све операције сложености $O(\log n)$. Према томе, операције су у најбољем случају сложености $O(\log n)$. \\
+	\indent Висина стабла тешко може да се процени ако су заступљене операције уклањања и додавања чвора. Зато ћемо дефинисати \textbf{насумично генерисано стабло бинарне претраге} са $n$ чворова као стабло које настаје после $n$ операција додавања чвора у почетно празно стабло бинарне претраге.
+	
+	\begin{teorema}
+		\normalfont
+		Математичко очекивање висине насумично генерисаног стабла бинарне претраге са $n$ чворова је $O(\log n)$.
+	\end{teorema}
+
+	\begin{dokaz}
+		Дефинисаћемо три случајне променљиве које ће нам помоћи да одредимо очекивану висину. Нека је $X_n$ случајна променљива која представља висину насумично генерисаног стабла  бинарне претраге од $n$ чворова и нека је $Y_n=2^{X_n}$ случајна променљива која представља експоненцијалну висину тог стабла. Нека је $R_n$ случајна променљива која представља позицију кључа корена насумично генерисаног стабла бинарне претраге од $n$ чворова у сортираном низу свих кључева тог стабла по мањој вредности. Једнако је вероватно да $R_n$ узме било коју вредност из скупа $\{1, 2, ..., n\}$. \\
+		\indent Ако је $R_n=i$ тада је лево подстабло изграђено од $i-1$ кључева, а десно од $n-i$. Како је висина стабла за $1$ већа од веће висине подстабала, експоненцијална висина је двоструко већа од висине вишег подстабла. Према томе, ако је $R_n=i$, имамо да је
+		\begin{equation}
+			Y_n=2\cdot \func{max}(Y_{i-1}, Y_{n-i}).
+		\end{equation}
+		Базни случај је $Y_1=1$, а додаћемо и да је $Y_0=0$. \\
+		
+		\noindent Нека је $I_{n, i}$ индикатор догађаја да за насумично генерисано стабло бинарне претраге од $n$ чворова важи $R_n=i$. Како је у питању индикаторска променљива, за свако $i \in \{1, 2, ..., n \}$ важи
+		\begin{equation}
+			\mathbb{E}(I_{n, i})=\frac{1}{n}.
+		\end{equation}
+		Из истог разлога је
+		\begin{equation}
+			Y_n=\sum_{i=1}^{n} I_{n, i} \cdot (2\cdot \func{max}(Y_{i-1}, Y_{n-i})).
+		\end{equation}
+		
+		\newpage
+		
+		\noindent Лако се увиђа да је индикатор $I_{n, i}$ независан од $Y_{i-1}$ и $Y_{n-i}$, па на основу тога имамо
+		
+		\begin{equation}
+		\begin{split}
+		\mathbb{E}(Y_n) & =\mathbb{E}\left(\sum_{i=1}^{n} I_{n, i} \cdot (2\cdot \func{max}(Y_{i-1}, Y_{n-i})) \right) \\
+		& = \sum_{i=1}^{n} \mathbb{E}(I_{n, i} \cdot (2\cdot\func{max}(Y_{i-1}, Y_{n-i})))
+		\\
+		& = \sum_{i=1}^{n} \mathbb{E}(I_{n, i}) \cdot \mathbb{E}(2\cdot \func{max}(Y_{i-1}, Y_{n-i})) \\
+		& = \sum_{i=1}^{n} \frac{1}{n} \cdot \mathbb{E}(2\cdot \func{max}(Y_{i-1}, Y_{n-i})) \\
+		& = \frac{2}{n} \sum_{i=1}^{n} \mathbb{E}(\func{max}(Y_{i-1}, Y_{n-i})) \\
+		& \leq \frac{2}{n} \sum_{i=1}^{n} (\mathbb{E}(Y_{i-1})+\mathbb{E}(Y_{n-i})) \\
+		& = \frac{4}{n} \sum_{i=0}^{n-1} \mathbb{E}(Y_i)
+		\end{split}
+		\end{equation}
+		\noindent Индукцијом ћемо показати да је $\mathbb{E}(Y_n) \leq \frac{1}{4} \binom{n+3}{3}$. Користићемо се идентитетом \textit{хокејашког штапа}, који овде нећемо доказивати. \\
+		\indent База индукције је испуњена јер је $0=Y_0=\mathbb{E}(Y_0) \leq \frac{1}{4}\binom{3}{3}=\frac{1}{4}$ и $1=Y_1=\mathbb{E}(Y_1)\leq \frac{1}{4} \binom{1+3}{3}=1$. Примењујући индуктивну претпоставку на индуктивни корак добијамо тражено		
+		\begin{equation}
+		\begin{split}
+		\mathbb{E}(Y_n) & \leq \frac{4}{n}\sum_{i=0}^{n-1} \mathbb{E}(Y_i) \\
+		& \leq \frac{4}{n} \sum_{i=0}^{n-1} \frac{1}{4} \binom{i+3}{3}\\
+		& = \frac{1}{n} \sum_{i=0}^{n-1} \binom{i+3}{3} \\
+		& = \frac{1}{n} \binom{n+3}{4} \\
+		& = \frac{1}{4} \binom{n+3}{3}. 
+		\end{split}
+		\end{equation}
+		
+		\noindent Како је функција $f(x)=2^x$ конвексна, применићемо Јенсенову неједнакост, па добијамо		
+		\begin{equation}
+		\begin{split}
+		2^{\mathbb{E}(X_n)} & \leq \mathbb{E}\left(2^{X_n} \right) \\
+		& = \mathbb{E}(Y_n) \\
+		& \leq \frac{1}{4} \binom{n+3}{3} \\
+		& = \frac{1}{4} \cdot \frac{(n+3)(n+2)(n+1)}{6} \\
+		& = \frac{n^3+6n^2+11n+6}{24}.
+		\end{split}
+		\end{equation}
+		\noindent Логаритмујући ову неједнакост добијамо $\mathbb{E}(X_n)=O(\log n)$. \qed
+	\end{dokaz}
+
+	\newpage
+	
+	\section{Сплеј стабло}
+	Сплеј стабло припада фамилији самобалансирајућих стабала бинарне претраге, са особином да је елементима којима је већ приступљено могуће приступити поново за значајно мање времена. Тарџан и Слетор\footnote{Daniel Sleator -- амерички информатичар познат по link/cut стаблима} су 1985. године представили ову врсту стабала као потребну структуру за link/cut стабла [7]. У односу на обично стабло бинарне претраге, ово стабло користи \textit{сплеј} операцију којом одржава балансираним. \\
+	
+	\noindent Све операције су исте као и код обичног стабла бинарне претраге и њихове сложености су $O(h)$. Предност овог стабла јесте што су амортизоване сложености $O(\log n)$, што ћемо и доказати у даљем тексту. \\
+	
+	\noindent Нека је $size(x)$ величина подстабла са кореном $x$ и нека је $rank(x)=\log_2 (size(x))$. Потенцијална функција коју ћемо користити за потенцијални метод амортизоване анализе је 
+	\begin{equation}
+		\Phi (D)=\sum_{v \in V_D} rank(v).
+	\end{equation}
+	
+	\subsection{Подржане операције}
+	
+	Детаљније ћемо описати само сплеј операцију којом се чвор поставља за корен стабла. Сплеј операција се користи кад год се неком чвору приступа, услед чега тај чвор постаје корен стабла. Остале операције су исте као и код стабла бинарне претраге.
+	
+	\subsubsection*{Сплеј операција}
+	Када се приступи чвору $x$, низом корака се поставља за корен стабла. Скорије приступљени чворови су ближи корену стабла. \\
+	
+	\noindent Разликујемо три основна случаја:
+	
+		\begin{itemize}
+			\item да ли је чвор $x$ лево или десно дете свог родитеља $p$,
+			\item да ли је чвор $p$ корен, а ако није
+			\item да ли је чвор $p$ лево или десно дете свог родитеља $g$.
+		\end{itemize}
+	
+	\noindent Постоје три корака сплеј операције, и то за сваки од њих лева и десна варијанта, зависно од положаја у стаблу. Показаћемо само леву варијанту којој је десна аналогна.
+	
+	\begin{itemize}
+		\item \textbf{Цик корак:} Дешава се када је чвор $p$ корен. Стабло се ротира око гране $(x, p)$. Може се догодити само једном и то на крају сплеј операције, под условом да је чвор $x$ био на непарној дубини.
+		
+		\begin{center}
+			\begin{tikzpicture}[thick,level/.style={sibling distance = 2.5cm/#1,
+				level distance = 1cm}]
+			\node[circle, draw, thick] (p) {$p$}
+			[child anchor=north]child{ node[circle, draw, thick] {$x$}
+				child{node[isosceles triangle, inner sep=0.2em, draw, shape border rotate=90] {$A$}}
+				child{node[isosceles triangle, inner sep=0.2em,draw, shape border rotate=90] {$B$}}
+			}
+			child{ node[isosceles triangle,inner sep=0.2em, draw, shape border rotate=90] (C) {$C$}}
+			;
+			\node[circle, draw, right=15em of p, thick] (x) {$x$}
+			[child anchor=north]child{ node[isosceles triangle, inner sep=0.2em, draw, shape border rotate=90] (A) {$A$}}
+			child{ node[circle, draw, thick] {$p$}
+				child{node[isosceles triangle, inner sep=0.2em, draw, shape border rotate=90] {$B$}}
+				child{node[isosceles triangle, inner sep=0.2em,draw, shape border rotate=90] {$C$}}
+			}
+			;
+			\draw[-stealth, decoration={snake, pre length=0.01mm, segment length=2mm, amplitude=0.3mm, post length=1.5mm}, decorate, thick] ([xshift=+1em]C.east) -- node[above] {} node[below] {} ([xshift=-1em]A.west);
+			\end{tikzpicture}
+		\end{center}
+	
+		Нека је $rank'$ ранг после цик корака. Тада важи
+		\begin{equation}
+		\begin{split}
+		\Delta \Phi &= rank'(p)-rank(p)+rank'(x)-rank(x) \\
+		&= rank'(p)-rank(x) \\
+		&\leq rank'(x)-rank(x)
+		\end{split}
+		\end{equation}
+	
+		\item \textbf{Цик--цик корак:} Дешава се када чвор $p$ није корен и када $x$ и $p$ припадају левом подстаблу својих родитеља. Стабло се ротира око гране $(p, g)$, , па око $(x, p)$.
+		\begin{center}
+			\begin{tikzpicture}[thick,level/.style={sibling distance = 2.5cm/#1,
+				level distance = 1cm}]
+			\node[circle, draw, thick] (p) {$g$}
+			[child anchor=north]child{ node[circle, draw, thick] {$p$}
+				child{node[circle, draw, thick] {$x$}
+					child{node[isosceles triangle, inner sep=0.2em, draw, shape border rotate=90] {$A$}}
+					child{node[isosceles triangle, inner sep=0.2em,draw, shape border rotate=90] {$B$}}
+				}
+				child{node[isosceles triangle, inner sep=0.2em,draw, shape border rotate=90] {$C$}}
+			}
+			child{ node[isosceles triangle,inner sep=0.2em, draw, shape border rotate=90] (D) {$D$}}
+			;
+			\node[circle, draw, thick, right=15em of p] (x) {$x$}
+			[child anchor=north]
+			child{ node[isosceles triangle,inner sep=0.2em, draw, shape border rotate=90] (A) {$A$}}
+			child{ node[circle, draw, thick] {$p$}
+				child{node[isosceles triangle, inner sep=0.2em, draw, shape border rotate=90] {$B$}}
+				child{node[circle, draw, thick] {$g$}
+					child{node[isosceles triangle, inner sep=0.2em, draw, shape border rotate=90] {$C$}}
+					child{node[isosceles triangle, inner sep=0.2em,draw, shape border rotate=90] {$D$}}
+				}
+			}
+			;
+			\draw[-stealth, decoration={snake, pre length=0.01mm, segment length=2mm, amplitude=0.3mm, post length=1.5mm}, decorate, thick] ([xshift=+1em]D.east) -- node[above] {} ([xshift=-1em]A.west);
+			\end{tikzpicture}
+		\end{center}
+	
+		Нека је $rank'$ ранг после цик--цик корака. Тада важи
+		\begin{equation}
+			\begin{split}
+			\Delta \Phi&=rank'(g)-rank(g)+rank'(p)-rank(p)+rank'(x)-rank(x) \\
+			&= rank'(g)+rank'(p)-rank(p)-rank(x) \\
+			&\leq rank'(g)+rank'(x)-2\cdot rank(x) \\
+			&\leq 3\cdot(rank'(x)-rank(x))-1
+			\end{split}
+		\end{equation}
+	
+		\item \textbf{Цик--цак корак:} Дешава се када је $x$ у десном подстаблу свог родитеља, а $p$ у левом. Стабло се ротира око гране $(x, p)$, а онда око гране $(x, g)$.
+		\begin{center}
+			\begin{tikzpicture}[thick,level/.style={sibling distance = 2.5cm/#1,
+				level distance = 1cm}]
+			\node[circle, draw, thick] (p) {$g$}
+			[child anchor=north]child{ node[circle, draw, thick] {$p$}
+				child{node[isosceles triangle, inner sep=0.2em,draw, shape border rotate=90] {$A$}}
+				child{node[circle, draw, thick] {$x$}
+					child{node[isosceles triangle, inner sep=0.2em, draw, shape border rotate=90] {$B$}}
+					child{node[isosceles triangle, inner sep=0.2em,draw, shape border rotate=90] {$C$}}
+				}
+			}
+			child{ node[isosceles triangle,inner sep=0.2em, draw, shape border rotate=90] (D) {$D$}}
+			;
+			\node[circle, draw, thick, right=15em of p] (x) {$x$}
+			[child anchor=north]
+			child{node[circle, draw, thick] (p) {$p$}
+				child{node[isosceles triangle, inner sep=0.2em, draw, shape border rotate=90] {$A$}}
+				child{node[isosceles triangle, inner sep=0.2em,draw, shape border rotate=90] {$B$}}
+			}
+			child{node[circle, draw, thick] {$g$}
+				child{node[isosceles triangle, inner sep=0.2em, draw, shape border rotate=90] {$C$}}
+				child{node[isosceles triangle, inner sep=0.2em,draw, shape border rotate=90] {$D$}}
+			}
+			;
+			\draw[-stealth, decoration={snake, pre length=0.01mm, segment length=2mm, amplitude=0.3mm, post length=1.5mm}, decorate, thick] ([xshift=+1em]D.east) -- node[above] {} ([xshift=-1em]p.west);
+			\end{tikzpicture}
+		\end{center}
+	
+		Нека је $rank'$ ранг после цик--цак корака. Тада важи
+		\begin{equation}
+			\begin{split}
+				\Delta \Phi &= rank'(g)-rank(g)+rank'(p)-rank(p)+rank'(x)-rank(x) \\
+				&\leq rank'(g)+rank'(p)-2\cdot rank(x) \\
+				&\leq 2\cdot(rank'(x)-rank(x))-2
+			\end{split}
+		\end{equation}
+	\end{itemize}
+
+	\noindent Како се у цик--цик и цик--цак кораку дешавају две ротације амортизована сложеност те две операције је $O(\log n)$. Цик корак додаје амортизовану сложеност $1$, али је највише једна таква операција. Дакле, за низ од $m$ операција је потребно $O(m \log n)$ амортизованог времена. Да би време извршавања ограничили одозго потребно је да урачунамо промену потенцијала
+	\begin{equation}
+	\Phi_{init}-\Phi_{end}=\sum_{v \in V}^{}rank_{init}(v)-\sum_{v \in V}^{}rank_{end}(v)=O(n \log n).
+	\end{equation}
+	
+	\noindent Према томе, за извршавање низа од $m$ операција је потребно $O(m \log n + n \log n)$ времена.
+	
+	\newpage
+	
+	\section{Ван Емде Боасово стабло}
+	
+	Петар ван Емде Боас\footnote{Peter van Emde Boas -- холандски информатичар} је 1975. године представио ову врсту стабала [8]. Ван Емде Боасово стабло има сложеност $O(\log\log n)$ по операцији, уместо досадашње сложености $O(\log n)$. За разлику од досадашњих структура, ово стабло подразумева да су елементи из тачно одређеног скупа вредности.
+	
+	\subsection{Мотивација}
+	За почетак, желимо да подржимо операције \proc{Find}, \proc{Insert} и \proc{Delete} за време $O(1)$. То се врло лако имплементира коришћењем логичког низа који има вредност $1$ на позицји $x$ ако је вредност $x$ претходно убачена у низ, а $0$ иначе. Нека је величина низа $n$. Проналазак одређене вредности и њено брисање се тривијално имплементира. Операције које су неефикасне над овим низом јесу \proc{Succesor} и \proc{Predecessor} јер захтевају $O(n)$ времена за проналазак следбеника, односно претходника. \\
+	
+	\noindent Иако наизглед ни мало ефикасна структура података, логички низ је у основи ван Емде Боасовог стабла. Како се над овако примитивном структуром појави сложеност $O(\log\log n)$? \\
+	
+	\noindent Претпоставимо да су елементи из неког универзума $U$ јединствени и да могу да узму вредност из скупа $\{0, 1, 2, ..., u-1\}$. Ради једноставности, претпоставићемо да је $u$ степен двојке. Интуитивно, логаритамска сложеност се јавља приликом бинарног претраживања. Уколико би имали стабло висине $\log u$, бинарним претраживањем би дошли до поменуте сложености. Према томе, основна рекурентна формула је
+	\begin{equation}
+	T(\log u)=T\left(\frac{\log u}{2}\right)+O(1).
+	\end{equation}
+	Уколико би добијену формулу изразили у зависности од $u$ добили би	
+	\begin{equation}
+		\begin{split}
+		T(u) &= T(\sqrt u)+O(1) \\
+		T(u) &= O(\log\log u).
+		\end{split}
+	\end{equation}
+	
+	\noindent Добијена рекурентна формула је позната и асоцира на корен декомпозицију низа, што ћемо и урадити. Низ ћемо поделити на $\sqrt{u}$ кластера величине по $\sqrt{u}$. За сваки непразан кластер чувамо $1$, а иначе $0$. То ћемо да урадимо формирањем логичког низа величине $\sqrt{u}$ којег ћемо звати \textit{сумирајући низ}. Када хоћемо да нађемо следбеника неког елемента, довољно је да у сумирајућем наиђемо на прву следећу \const{TRUE} вредност, а онда да у том кластеру нађемо најмањи елемент. Дакле, операција \proc{Successor} захтева $O(\sqrt{u})$ времена. Потпуно аналоган поступак важи за тражење претходника неког елемента. \\
+	
+	\begin{figure} [H]
+		\renewcommand\figurename{Слика}
+	\begin{center}
+		\begin{tikzpicture}
+		
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick] (R1) {$1$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, right=0em of R1] (R2) {$1$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, right=0em of R2] (R3) {$0$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, right=0em of R3] (R4) {$1$};
+				
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, below=4em of R1] (N7) {$0$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, left=0em of N7]
+				(N6) {$1$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, left=0em of N6]
+				(N5) {$1$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, left=0em of N5]
+				(N4) {$1$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, left=0em of N4]
+				(N3) {$1$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, left=0em of N3]
+				(N2) {$0$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, left=0em of N2]
+				(N1) {$0$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, right=0em of N7] (N8) {$1$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, right=0em of N8] (N9) {$0$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, right=0em of N9] (N10) {$0$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, right=0em of N10] (N11) {$0$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, right=0em of N11] (N12) {$0$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, right=0em of N12] (N13) {$0$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, right=0em of N13] (N14) {$0$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, right=0em of N14] (N15) {$1$};
+				\node[rectangle, text depth=0em, inner sep=0.3em, draw, thick, right=0em of N15] (N16) {$1$};
+				
+				\draw[thick] (R1.south west) -- ([yshift=+0.5em]N2.north east);
+				\draw[thick] (R2.south) -- ([yshift=+0.5em]N6.north east);
+				\draw[thick] (R3.south) -- ([yshift=+0.5em]N11.north west);
+				\draw[thick] (R4.south east) -- ([yshift=+0.5em]N15.north west);
+				\draw[decoration={brace,mirror, raise=3pt},decorate]
+				(N4.north east) -- (N1.north west);
+				\draw[decoration={brace,mirror, raise=3pt},decorate]
+				(N8.north east) -- (N5.north west);
+				\draw[decoration={brace,mirror, raise=3pt},decorate]
+				(N12.north east) -- (N9.north west);
+				\draw[decoration={brace,mirror, raise=3pt},decorate]
+				(N16.north east) -- (N13.north west);
+				\draw[thick, color=red, line width=1mm] ([yshift=+0.2em]N4.north east) -- ([yshift=-0.2em]N4.south east);
+				\draw[thick, color=red, line width=1mm] ([yshift=+0.2em]N8.north east) -- ([yshift=-0.2em]N8.south east);
+				\draw[thick, color=red, line width=1mm] ([yshift=+0.2em]N12.north east) -- ([yshift=-0.2em]N12.south east);
+		\end{tikzpicture}
+		\caption{Низ од $16$ елемената са сумирајућим низом и кластерима}
+	\end{center}
+	\end{figure}
+	
+	\noindent За неки елемент $x$ важи да је редни број кластера којем припада $\lfloor x/\sqrt{u} \rfloor$, а да је његов редни број у кластеру $x \mod \sqrt u$. Увешћемо три помоћне функције
+	\begin{equation}
+		\begin{split}
+		high(x) &= \lfloor x/\sqrt{u} \rfloor \\
+		low(x) &= x \mod \sqrt u \\
+		index(i, j) &= i \cdot \sqrt u + j.
+		\end{split}
+	\end{equation}
+	
+	\noindent Имена $high$ и $low$ нису случајна. Као што видимо из $(1)$, а знајући да за репрезентацију броја $x$ у бинарном бројном систему треба $\lfloor \log x \rfloor$ цифара, лако можемо да покажемо да прва половина броја $x_2$ одговара вредности $high(x)$, а друга половина вредности $low(x)$.
+	
+	\subsection{Прото ван Емде Боасово стабло}
+	
+	Иако не постиже жељене сложености, прото структура представља основу за ван Емде Боасово стабло, па ћемо зато размотрити ову ,,лакшу'' верзију стабла.
+	
+	\subsubsection{Дефиниције и својства}
+	
+	Претпоставимо да је $u=2^{2^k}$. Иако је ово прилично стриктна претпоставка, значајно ће олакшати описивање помоћне структуре. \\
+	
+	\noindent Прото ван Емде Боасово стабло величине $u$ ћемо означити са proto-vEB($u$).
+	
+	\begin{definicija}
+		\normalfont
+		
+		\noindent За универзум величине $2$, прото ван Емде Боасово стабло садржи, поред величине универзума $u$, само двобитовни логички низ $A$ са већ описаном улогом, за скуп вредности $\{x, x+1\}$. За универзум величине $u \geq 4$, у прото ван Емде Боасовом стаблу постоје још два атрибута:
+		\begin{itemize}
+			\item  низ $cluster[0..\sqrt{u}-1]$ -- садржи показиваче на $\sqrt{u}$ прото структура величине $\sqrt u$,
+			\item $summary$ -- показивач на сумирајуће стабло proto-vEB($\sqrt u$). Сумирајуће стабло има исту улогу као и сумирајући низ и представља природно проширење на стаблу.
+		\end{itemize}
+	\end{definicija}
+	
+	\subsubsection{Подржане операције}
+	Прво ћемо размотрити операције које не мењају стабло.
+	
+	\paragraph{Провера присуства елемента}
+	Желимо да проверимо да ли се дати елемент $x$ налази у стаблу. Случај када је $u=2$ је тривијалан. Када је $u \geq 4$, прво проверавамо да ли кластер елемента $x$ уопште садржи елементе, што можемо помоћу сумирајућег стабла. Даље рекурзивно улазимо у само једну структуру.
+	\begin{codebox}
+		\Procname {\proc{Member}($V$, $x$)}
+		\li \If $V.u==2$
+		\li \Do \Return $V.A[x]$
+		\End
+		\li \Return \proc{Member}($V.cluster[high(x)]$, $low(x)$)
+	\end{codebox}
+
+	\noindent Рекурентна формула је $T(u)=T(\sqrt u)+O(1)$, па сложеност фунцкије \proc{Member} износи $O(\log\log u)$.
+	
+	\newpage
+	
+	\paragraph{Проналазак најмањег елемента}
+	Увек нам је у интересу да узмемо први непразан кластер, јер ће у њему сигурно бити мања вредност него у било ком другом непразном кластеру. Зато проналазимо најмањи елемент у сумирајућем стаблу, који заправо представља први непразан кластер. Рекурзивно тражећи најмањи елемент за тај кластер, налазимо најмањи елемент целог стабла.
+	\begin{codebox}
+		\Procname{\proc{proto-vEB-Find-Min}($V$)}
+		\li \If $V.u==2$
+		\li \Do \If $V.A[0]==1$
+		\li \Do \Return $0$
+		\End
+		\li \If $V.A[1]==1$
+		\li \Do \Return $1$
+		\End
+		\li \Return $\infty$
+		\End
+		\li \Else $min$-$cluster=$ \proc{proto-vEB-Find-Min}($V.summary$)
+		\li \Do \If $min$-$cluster==\const{NIL}$
+		\li \Do \Return $\infty$
+		\End
+		\li \Else \textit{offset}$=$\proc{proto-vEB-Find-Min}($V.cluster[min$-$cluster]$)
+		\li \Return $index(min$-$cluster$, \textit{offset}$)$
+	\end{codebox}
+
+	\noindent У функцији \proc{proto-vEB-Find-Min} се дешавају два рекурзивна позива за proto-vEB($\sqrt u$), па зато имамо другачију рекурентну формулу	
+	\begin{equation}
+	T(u)=2T(\sqrt u)+O(1).
+	\end{equation}
+	\noindent Уводећи смену $m=\log u$ имамо
+	\begin{equation}
+		T(2^m)=T(2^{m/2})+O(1).
+	\end{equation}
+	Уводећи смену $S(m)=T(2^m)$ добијамо
+	\begin{equation}
+		S(m)=2S(m/2)+O(1),
+	\end{equation}
+	што према мастер теореми следи да је $S(m)=\Theta (m)$. Враћајући смену $u=\log m$, добијамо да је сложеност функције \proc{proto-vEB-Find-Min} $\Theta(\log u)$, уместо $O(\log\log u)$. 
+	
+	\paragraph{Проналазак следбеника произвољног елемента}
+	
+	Прво морамо да проверимо постоји ли већи елемент од $x$ у његовом кластеру. Уколико то није испуњено, треба нам најмањи елемент првог непразног кластера.
+	\begin{codebox}
+		\Procname{\proc{proto-vEB-Successor}($V$, $x$)}
+		\li \If $V.u==2$
+		\li \Do \If $x==0$ and $V.A[1]==1$
+		\li \Do \Return $1$
+		\li \Else \Return $\infty$
+		\End
+		\li \Else $\textit{offset}=\proc{proto-vEB-Successor}(V.cluster[high(x)]$, $low(x))$
+		\li \Do \If \textit{offset}$\neq \infty$
+		\li \Do \Return $index(high(x)$, \textit{offset}$)$
+		\li \Else $\textit{succ-cluster}=\proc{proto-vEB-Successor}(V.summary$, $high(x)$)
+		\li \Do \If $\textit{succ-cluster}==\infty$
+		\li \Do \Return $\infty$
+		\End
+		\li \Else $\textit{offset}=\proc{proto-vEB-Find-Min}$($V.cluster[\textit{succ-cluster}]$)
+		\li \Do \Return $index$(\textit{succ-cluster}, \textit{offset})
+	\end{codebox}
+
+	\noindent Лако долазимо до рекурентне формуле
+	\begin{equation}
+		\begin{split}
+		T(u) &= 2T(\sqrt u)+\Theta(\log\sqrt u) \\
+		&= 2T(\sqrt u)+\Theta(\log u).
+		\end{split}
+	\end{equation}
+	
+	\indent Слично као у (8.4), добија се да сложеност функције следбеника износи $\Theta(\log u\log\log u)$.
+	
+	\paragraph{Додавање новог елемента}
+	Када додајемо нови елемент, неопходно да је променимо сумирајуће стабло и вредност у кластеру и то на сваком нивоу стабла.
+	
+	\begin{codebox}
+		\Procname{\proc{proto-vEB-Insert}($V$, $x$)}
+		\li \If $V.u==2$
+		\li \Do $V.A[x]=1$
+		\End
+		\li \Else \proc{proto-vEB-Insert}($V.cluster[high(x)]$, $low(x)$)
+		\li \Do \proc{proto-vEB-Insert}($V.summary$, $high(x)$)
+	\end{codebox}
+
+	Како се дешавају два рекурзивна позива, сложеност функције \proc{proto-vEB-Insert} износи $\Theta (\log u)$.
+	
+	\paragraph{Уклањање произвољног елемента}
+	Операција брисања је компликованија од додавања елемента. За разлику од додавања, где $1$ можемо да упишемо на место на ком можда већ постоји $1$, са уписивањем нуле то није случај. Морамо да утврдимо да ли уклањањем тог елемента постоји неки други елемент, због чега вредност сумирајућег стабла не смемо да мењамо. Псеудокод ове функције изостављамо, јер се имплементација ове операције значајно разликује од прото варијанте.
+	
+	\subsection{Ван Емде Боасово Стабло -- коначна верзија}
+	
+	Описаћемо финалну верзију ове структуре података. У великој мери ћемо се ослонити на прото структуру. Циљ је да смањимо број рекурзивних позива и да на тај начин достигнемо жељену сложеност.
+	
+	\subsubsection{Дефиниција и својства}
+	Главна претпоставка у прото варијанти јесте $u=2^{2^k}$. Од сада подразумевамо да је $u=2^k$. Када се деси да $\sqrt u$ није цео број, поделићемо $\log u$ битова на водећих $\lceil (\log u /2) \rceil$ и осталих $\lfloor (\log u/2) \rfloor$ битова. Вредност $2^{\lceil (\log u /2) \rceil}$ ћемо означити са $\sqrt[\uparrow]{u}$, а вредност $2^{\lfloor (\log u/2) \rfloor}$ са $\sqrt[\downarrow]{u}$. У складу са тим ћемо додефинисати функције $high$, $low$ и $index$:
+	\begin{equation}
+		\begin{split}
+		high(x) &= \lfloor x/\sqrt[\downarrow]{u} \rfloor \\
+		low(x) &= x \mod \sqrt[\downarrow]{u} \\
+		index(i, j) &= i\sqrt[\downarrow]{u}+j.
+		\end{split}
+	\end{equation}
+	
+	\noindent У складу са насталим променама, можемо да дефинишемо ван Емде Боасово стабло, као унапређену верзију прото ван Емде Боасовог стабла, које ћемо означити са $vEB(u)$ за универзум величине $u$.
+	\begin{definicija}
+		\normalfont
+		Уколико је $u\geq4$, атрибут $summary$ показује ка $vEB(\sqrt[\uparrow]{u})$ стаблу, а низ $cluster[0..\sqrt[\uparrow]{u}]$ садржи показиваче на $\sqrt[\uparrow]{u}$ $vEB(\sqrt[\downarrow]{u})$ стабала. Постоје још два атрибута:
+		\begin{itemize}
+			\item $min$ -- најмањи елемент у $vEB$ стаблу и
+			\item $max$ -- највећи елемент у $vEB$ стаблу.
+		\end{itemize}
+	\end{definicija}
+
+	\indent Елемент сачуван у \textit{min} се неће појавити ни у једном рекурзивном $vEB(\sqrt[\downarrow]{u})$ стаблу на које $cluster$ показује, док елемент \textit{max} хоће. Дакле, елементи $vEB(u)$ стабла $V$, су $V.min$ и сви елементи $vEB(\sqrt[\downarrow]{u})$ стабала на које показује $V.cluster[0..\sqrt[\uparrow]{u}]$.\\
+	\indent Сада нам за $u=2$ више не треба двобитовни логички низ $A$ јер имамо атрибуте $min$ и $max$. Ови атрибути нам помажу у следећим случајевима:
+	\begin{itemize}
+		\item Функције \proc{Find-Min} и \proc{Find-Max} могу само да врате атрибуте $min$ и $max$.
+		\item Функција \proc{Successor} више не мора да прави рекурзиван позив ради провере да ли су $x$ и његов следбеник у истом кластеру. То важи због тога што те две вредности могу бити у истом кластеру акко је вредност елемента $x$ строго мања од највеће вредности тог кластера. Аналогно важи за функцију \proc{Predecessor}.
+		\item Лако утврђујемо да ли је стабло празно, да ли има само један или бар два елемента у сложености $O(1)$.
+		\item Уколико је стабло празно или има један елемент, додавање и брисање елемента захтева $O(1)$ времена.
+	\end{itemize}
+
+	Чак и када је $u$ непаран степен броја $2$, разлика у величини сумирајућег стабла и кластера неће утицати на асимптотику операција. Главна рекурентна формула је
+	\begin{equation}
+	T(u)\leq T(\sqrt[\uparrow]{u})+O(1).
+	\end{equation}
+	
+	Водећи се сличним поступком као у (8.4), добијамо да је $T(u)=O(\log\log u)$.
+	
+	\subsubsection{Подржане операције}
+	Као и при описивању операција прото ван Емде Боасовог стабла, и овде ће прво бити размотрене опрације које не мењају стабло.
+	
+	\paragraph{Проналазак најмањег и највећег елемента}
+	Како се потребне информације налазе у атрибутима стабла, сложености су $O(1)$.
+	
+	\begin{multicols}{2}
+	\begin{codebox}
+	\Procname{\proc{vEB-Tree-Find-Min}($V$)}
+	\li \Return $V.min$
+	\end{codebox}
+	\begin{codebox}
+	\Procname{\proc{vEB-Tree-Find-Max}($V$)}
+	\li \Return $V.max$
+	\end{codebox}
+	\end{multicols}
+
+	\paragraph{Провера присуства елемента}
+	Ова ће функција, иако у прото структури оптимална, бити промењена. Разлог томе је што $vEB$ стабло не чува битове као што то ради proto-vEB.
+	
+	\begin{codebox}
+		\Procname{\proc{vEB-Tree-Member}($V$, $x$)}
+		\li \If $x==V.min$ or $x==V.max$
+		\li \Do \Return \const{TRUE}
+		\End
+		\li \ElseIf $V.u==2$
+		\li \Do \Return \const{FALSE}
+		\End
+		\li \Else \Return \proc{vEB-Member}($V.cluster[high(x)]$, $low(x)$)
+	\end{codebox}
+
+	\indent Како се дешава само један рекурзиван позив, рекурентна формула је једнака $(8.9)$ па је сложеност функције \proc{vEB-Tree-Member} $O(\log\log u)$.
+	
+	\newpage
+	
+	\paragraph{Проналазак следбеника произвољног елемента}
+	Главна разлика у односу на прото структуру је што су нам најмањи и највећи елементи доступни, те нам рекурзиван позив у случају да следбеник припада истом кластеру као и $x$ више није потребан.
+	\begin{codebox}
+		\Procname{\proc{vEB-Tree-Successor}($V$, $x$)}
+		\li \If $V.u==2$
+		\li \Do \If $x==0$ and $V.max==1$
+		\li \Do \Return $1$
+		\li \Else \Return $\infty$
+		\End
+		\li \ElseIf $V.min \neq -\infty$ and $x<V.min$
+		\li \Do \Return $V.min$
+		\End
+		\li \Else $\textit{max-low}=\proc{vEB-Tree-Find-Max}$($V.cluster[high(x)]$)
+		\li \Do \If $\textit{max-low}\neq \infty$ and $low(x)<\textit{max-low}$
+		\li \Do $\textit{offset}=\proc{vEB-Tree-Successor}$($V.cluster[high(x)]$, $low(x)$)
+		\li \Return $index$($high(x)$, $low(x))$
+		\li \Else $\textit{succ-cluster}=\proc{vEB-Tree-Successor}$($V.summary$, $high(x)$)
+		\li \Do \If $\textit{succ-cluster}==\infty$
+		\li \Do \Return $\infty$
+		\End
+		\li \Else $\textit{offset}=\proc{vEB-Tree-Find-Min}$($V.cluster[\textit{succ-cluster}]$)
+		\li \Do \Return $index($\textit{succ-cluster}, \textit{offset}$)$ 
+	\end{codebox}
+
+	\indent Како је могуће применити $(8.9)$, за функцију \proc{vEB-Tree-Succesor} треба $O(\log\log u)$  времена.
+	
+	\paragraph{Проналазак претходника произвољног елемента}
+	Иако наизглед потпуно симетрична, функција \proc{vEB-Predecessor} има једну битну разлику у односу на функцију следбеника. У случају када је претходник елемента минимум $vEB$ стабла, тада тај елемент не може бити пронађен ни у једном кластеру.
+	\begin{codebox}
+	\Procname{\proc{vEB-Tree-Predecessor}($V$, $x$)}
+	\li \If $V.u==2$
+	\li \Do \If $x==0$ and $V.min==0$
+	\li \Do \Return $0$
+	\li \Else \Return $-\infty$
+	\End
+	\li \ElseIf $V.max \neq \infty$ and $x>V.max$
+	\li \Do \Return $V.max$
+	\End
+	\li \Else $\textit{max-low}=\proc{vEB-Tree-Find-Min}$($V.cluster[high(x)]$)
+	\li \Do \If $\textit{min-low}\neq -\infty$ and $low(x)>\textit{min-low}$
+	\li \Do $\textit{offset}=\proc{vEB-Tree-Predecessor}$($V.cluster[high(x)]$, $low(x)$)
+	\li \Return $index$($high(x)$, $low(x))$
+	\li \Else $\textit{pred-cluster}=\proc{vEB-Tree-Predecessor}$($V.summary$, $high(x)$)
+	\li \Do \If $\textit{pred-cluster}==-\infty$
+	\li \Do \If $V.min\neq -\infty$ and $x>V.min$
+	\li \Do \Return $V.min$
+	\End
+	\li \Do \Else \Return $-\infty$
+	\End
+	\li \Else $\textit{offset}=\proc{vEB-Tree-Find-Max}$($V.cluster[\textit{pred-cluster}]$)
+	\li \Do \Return $index($\textit{pred-cluster}, \textit{offset}$)$ 
+	\end{codebox}
+
+	Како је једина промена у односу на функцију следбеника сложености $O(1)$, закључујемо да функција \proc{vEB-Tree-Predecessor} захтева $O(\log\log u)$ времена.
+	
+	\paragraph{Додавање новог елемента}
+	\begin{minipage}{\textwidth}
+		Приликом додавања елемента у прото стабло била су потребна два рекурзивна позива, један за сумирајуће стабло, а други за кластер. Приликом додавања елемента у $vEB$ стабло довољан је само један позив. Ако је редни број кластера већ присутан у сумирајућем стаблу нема потребе за икаквим додавањем у то стабло. Уколико је кластер празан, додавање елемента у кластер захтева $O(1)$ времена и нема потребе за даљом рекурзијом. \\
+	\end{minipage}
+	
+	Користићемо и помоћну функцију \proc{Empty-vEB-Tree-Insert}, да би лакше решили проблем празног стабла.
+	
+	\begin{codebox}
+		\Procname{\proc{Empty-vEB-Tree-Insert}($V$, $x$)}
+		\li $V.min=x$
+		\li $V.max=x$
+	\end{codebox}
+
+	\begin{codebox}
+		\Procname{\proc{vEB-Tree-Insert}($V$, $x$)}
+		\li \If $V.min==-\infty$
+		\li \Do \proc{Empty-vEB-Tree-Insert}($V$, $x$)
+		\End
+		\li \ElseIf $x<V.min$
+		\li \Do $x \leftrightarrow V.min$ \Comment{\selectlanguage{russian}размена вредности}
+		\li \Do \If $V.u>2$
+		\li \Do \If \proc{vEB-Tree-Find-Min}($V.cluster[high(x)]$)$==-\infty$
+		\li \Do \proc{vEB-Tree-Insert}($V.summary$, $high(x)$)
+		\li \proc{Empty-vEB-Tree-Insert}($V.cluster[high(x)]$, $low(x)$)
+		\li \Else \proc{vEB-Tree-Insert}($V.cluster[high(x)]$, $low(x)$)
+		\End \End
+		\li \If $x>V.max$
+		\li \Do $V.max=x$ 
+	\end{codebox}
+
+	Рекурзија улази у стабло величине универзума највише $\sqrt[\uparrow]{n}$. Према томе, рекурентна формула је $(8.9)$, па функција \proc{vEB-Tree-Insert} захтева $O(\log\log u)$ времена.
+	
+	\newpage
+	
+	\paragraph{Уклањање произвољног елемента}
+	Ова операција је насложенија, али се могу уочити главни случајеви:
+	\begin{itemize}
+		\item Стабло има само један елемент па је довољно само променити атрибуте $min$ и $max$.
+		\item Елемент који се уклања је и најмањи елемент стабла. Тада морамо да нађемо следећи најмањи елемент и да њега уклонимо из стабла.
+		\item Елемент који се уклања је и највећи елемент стабла. Тада морамо да нађемо следећи највећи елементи да њега поставимо за највећи елемент стабла, водећи рачуна о томе да стабло може остати са само једним елементом.
+		\item Елемент који се брише није ни најмањи ни највећи елемент стабла. Тада се елемент брише из кластера и  евентуално врши ажурирање сумирајућег стабла.
+	\end{itemize}
+
+	\begin{codebox}
+		\Procname{\proc{vEB-Tree-Delete}($V$, $x$)}
+		\li \If $V.min==V.max$
+		\li \Do $V.min=-\infty$
+		\li $V.max=\infty$
+		\End
+		\li \ElseIf $V.u==2$
+		\li \Do \If $x==0$
+		\Do \Do \li $V.min=1$
+		\li \Else $V.min=0$
+		\li $V.max=V.min$
+		\End \End
+		\li \ElseIf $x==V.min$
+		\li \Do $\textit{first-cluster}=$\proc
+		{vEB-Tree-Find-Min}($V.summary$)
+		\li \Do $x=index$(\textit{first-cluster}, \proc{vEB-Tree-Find-Min}($V.cluster[\textit{first-cluster}])$)
+		\li $V.min=x$
+		\li \proc{vEB-Tree-Delete}($V.cluster[high(x)]$, $low(x)$)
+		\li \If $\proc{vEB-Tree-Find-Min}(V.cluster[high(x)])==-\infty$
+		\li \Do \proc{vEB-Tree-Delete}($V.summary$, $high(x)$)
+		\li \Do \If $x==V.max$
+		\li \Do $\textit{summary-max}=\proc{vEB-Tree-Find-Max}(V.summary)$
+		\li \If $\textit{summary-max}==\infty$
+		\li \Do $V.max=V.min$
+		\End
+		\li \Else $V.max=index(\textit{summary-max}$, \proc
+		{vEB-Tree-Find-Max}($V.cluster[\textit{summary-max}]$)
+		\End \End
+		\li \ElseIf $x==V.max$
+		\li \Do $V.max=index(high(x)$, \proc{vEB-Tree-Find-Max}($V.cluster[high(x)]$)
+	\end{codebox}
+
+	Наизглед се $(8.9)$ не може применити. Проблем праве линије $13$ и $15$, јер могу да направе два рекурзивна позива. То јесте тачно, али је потребно додатно анализирање. \\
+	\indent Пре него што се деси брисање елемента у линији $15$, линија $14$ осигурава да је кластер елемента $x$ празан. Кластер може остати празан једино ако је елемент $x$ био једини елемент свог кластера када се десило брисање у линији $13$. Како је $x$ био једини елемент свог кластера, уклањање троши $O(1)$ времена. Према томе, дошли смо до два случаја:
+	\begin{itemize}
+		\item Брисање у линији $13$ се извршило за константно време.
+		\item Брисање у линији $15$ се није десило.
+	\end{itemize}
+	
+	\indent У оба случаја важи да се сложеност може изразити помоћу $(8.9)$, па закључујемо да функција \proc{vEB-Tree-Delete} захтева $O(\log\log u)$ времена.
+	
+	\subsection{Временска и меморијска сложеност}
+	Све сложености операција које смо изразили су зависиле од величине унверзума, а не од броја елемената у стаблу. Међутим, ако за број елемената у стаблу $n$ важи да је $u=n^{O(1)}$ или $u=n^{\log ^{O(1)}n}$, тада је $\log\log u=O(\log\log n)$, па је сложеност сваке операције $O(\log\log n)$. \\
+	
+	\noindent За меморијску сложеност ћемо прво одредити рекурентну формулу. У стаблу величине универзума $u$ постоји сумирајуће стабло величине $\sqrt[\uparrow]{u}$. Постоји још $\sqrt[\uparrow]{u}$ показивача на $\sqrt[\uparrow]{u}$ $vEB(\sqrt[\downarrow]{u})$ стабала. Према томе, рекурентна формула је
+	\begin{equation}
+		M(u)=M(\sqrt[\uparrow]{u})+\sqrt[\uparrow]{u}\cdot M(\sqrt[\downarrow]{u})+O(\sqrt[\uparrow]{u}).
+	\end{equation}
+	
+	Мењајући $u=2^m$ долазимо до коначне рекурентне формуле
+	\begin{equation}
+	\begin{split}
+		M(u) &= (1+2^m)M(2^m)+O(\sqrt{u}) \\
+		M(u) &= (1+\sqrt{u})M(\sqrt u)+O(\sqrt{u}).
+	\end{split}
+	\end{equation}
+	
+	Да би решили ову рекурентну формулу, неопходно је да покажемо колико је пута потребно применити операцију квадратног корена пре него што број који коренујемо постане мањи или једнак $2$. \\
+	\indent Нека је број $n=2^k$. Кореновање таквог броја представља смањивање експонента $k$ за $1$ у свакој итерацији. Број $n$ после $\log k$ корака постаје $2$. Како је $k=\log_2 n$, закључујемо да је потребно $O(\log\log n)$ корака. Узмемо ли произвољан број $n$, број корака се може ограничити са бројем корака првог већег броја који је степен двојке. Према томе, број потребног броја кореновања пре него што број постане мањи или једнак $2$ је $O(\log\log n)$. \\
+	\indent Користећи се добијеним резултатом, рекурентну формулу можемо написати на следећи начин 
+	\begin{equation}
+		M(u)\leq \left(\prod_{k=1}^{\log\log u}\left(u^{\frac{1}{2^k}}+1\right)\right)M(2)+\sum_{k=1}^{\log\log u}O\left(u^{\frac{1}{2^k}}\right)\left(u^{\frac{1}{2^k}}+1\right).
+	\end{equation}
+	\indent У првом члану овог збира се јавља производ бинома. Моном са највећим степеном који одређује први члан датог збира јесте $u^\epsilon$ где је $\epsilon=\sum_{k=1}^{\log\log n}\frac{1}{2^k}$. Та сума се може ограничити геометријским редом $\sum_{k=1}^{\infty}\frac{1}{2^k}=1$. Према томе, први члан овог збира је $o(u)$. \\
+	\indent У другом члану збира се за $k=1$ јавља $O(u)$, јер је $\frac{2}{2^k}=1$, а за свако друго $k>1$ важи $\frac{2}{2^k}<1$ па су ти чланови $o(u)$. \\
+	\indent Дакле, рекурентну формулу можемо упростити, па добијамо $M(u)=o(u)+O(u)=O(u)$. Према томе, меморијска сложеност ван Емде Боасовог стабла је $O(u)$.
+	
+	\newpage
+	\section{Евалуација}
+	Као што је већ речено у уводу, обрађене структуре података ћемо корисити за Дајкстрин и Примов алгоритам. Оба алгоритма ће као улазне податке имати различите врсте графова и то: стабло, ланац, звезда граф, комплетан граф и насумично генерисан граф. За сваку врсту графа постоји више тест примера са различитим бројем чворова и грана. \\
+	
+	\noindent Сва времена су изражена у секундама, а за сваки граф су тежине грана произвољно биране.
+	
+	\subsection{Дајкстрин алгоритам}
+	
+	\begin{center}
+		\begin{table}[H]
+			\centering
+			\caption{Времена извршавања бинарног хипа}
+			\begin{tabular}{cccccc} \toprule
+				$n, m$ & ланац & стабло & звезда граф & комплетан граф & произвољан граф\\ \midrule
+				$10^2$ & 0.022 & 0.018 & 0.025 & 0.05 & 0.028\\ 
+				$10^3$ & 0.033 & 0.028 & 0.035 & 0.53 & 0.06\\
+				$10^4$ & 0.057 & 0.058 & 0.05 & & 0.1\\
+				$10^5$ & 0.12 & 0.14 & 0.17 & & 0.37\\
+				$2\cdot 10^5$ & 0.25 & 0.27 & 0.28 & & 0.6\\
+				\bottomrule
+			\end{tabular}
+		\end{table}
+	\end{center}
+	\begin{center}
+	\begin{table}[H]
+		\centering
+		\caption{Времена извршавања $d$--хипа}
+		\begin{tabular}{cccccc} \toprule
+			$n, m$ & ланац & стабло & звезда граф & комплетан граф & произвољан граф\\ \midrule
+			$10^2$ & 0.02 & 0.02 & 0.024 & 0.06 & 0.024 \\ 
+			$10^3$ & 0.032 & 0.024 & 0.04 & 0.47 & 0.09 \\
+			$10^4$ & 0.06 & 0.06 & 0.05 & & 0.08\\
+			$10^5$ & 0.13 & 0.16 & 0.14 & & 0.34\\
+			$2\cdot 10^5$ & 0.25 & 0.31 & 0.28 & & 0.54\\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	\end{center}
+	\begin{center}
+	\begin{table}[H]
+		\centering
+		\caption{Времена извршавања биномног хипа}
+		\begin{tabular}{cccccc} \toprule
+			$n, m$ & ланац & стабло & звезда граф & комплетан граф & произвољан граф\\ \midrule
+			$10^2$ & 0.14 & 0.47 & 0.45 & 0.36 & 1.17\\ 
+			$10^3$ & 1.51 & 1.65 & 1.76 & 8.46 & 5.22\\
+			$10^4$ & 14.21 & 15.78 & 16.02 & & 17.42\\
+			$10^5$ & 66.84 & 69.88 & 72.74 & & 79.19\\
+			$2\cdot 10^5$ & 150.1 & 166.33 & 158.64 & & 181.63\\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	\end{center}
+	\begin{center}
+	\begin{table}[H]
+		\centering
+		\caption{Времена извршавања Фибоначијевог хипа}
+		\begin{tabular}{cccccc} \toprule
+			$n, m$ & ланац & стабло & звезда граф & комплетан граф & произвољан граф\\ \midrule
+			$10^2$ & 0.021 & 0.12 & 0.21 & 0.24 & 2.22\\ 
+			$10^3$ & 0.27 & 0.47 & 0.46 & 10.81 & 5.78\\
+			$10^4$ & 1.24 & 5.12 & 5.18 & & 8.15\\
+			$10^5$ & 32.93 & 56.91 & 57.73 & & 75.05\\
+			$2\cdot 10^5$ & 58.74 & 72.88 & 86.44 & & 24.04\\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	\end{center}
+	\begin{center}
+	\begin{table}[H]
+		\centering
+		\caption{Времена извршавања сплеј стабла}
+		\begin{tabular}{cccccc} \toprule
+			$n, m$ & ланац & стабло & звезда граф & комплетан граф & произвољан граф\\ \midrule
+			$10^2$ & 0.03 & 0.019 & 0.027 & 0.04 & 0.024\\ 
+			$10^3$ & 0.03 & 0.031 & 0.034 & 0.65 & 0.05\\
+			$10^4$ & 0.62 & 0.067 & 0.1 & & 0.2\\
+			$10^5$ & 0.14 & 0.19 & 0.4 & & 0.72\\
+			$2\cdot 10^5$ & 0.27 & 0.41 & 0.52 & & 0.78\\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	\end{center}
+	\begin{center}
+	\begin{table}[H]
+		\centering
+		\caption{Времена извршавања ван Емде Боасовог стабла}
+		\begin{tabular}{cccccc} \toprule 
+			$n, m$ & ланац & стабло & звезда граф & комплетан граф & произвољан граф\\ \midrule
+			$10^2$ & 0.03 & 0.71 & 0.37 & 0.38 & 4.2\\ 
+			$10^3$ & 2.35 & 3.31 & 1.88 & 22.23 & 12.16\\
+			$10^4$ & 18.79 & 35.28 & 27.93 & & 19.62\\
+			$10^5$ & 95.64 & 87.42 & 89.19 & & 159.83\\
+			$2\cdot 10^5$ & 169.39 & 160.74 & 170.44 & & 216.12\\
+			\bottomrule
+		\end{tabular}
+		
+	\end{table}
+	\end{center}
+
+	\begin{comment}
+	Примећујемо да су једноставне структуре података у потпуности надмашиле компликованије, а теоријски ефикасније структуре података. Најбољи пример за то су бинарни хип и Фибоначијев хип. Бинарни хип је најчешћа имплементација $d$--хипа, док је Фибоначијев хип осмишљен с циљем да спусти сложеност бинарног хипа у Дајкстрином алгоритму. Међутим, услед велике константе и амортизованих операција, у пракси се показује да је $d$--хип далеко бољи од Фибоначијевог хипа. \\
+	\indent Не одступају много ни времена извршавања осталих структура података. Ван Емде Боасово стабло, као теоријски најјефикаснији приоритетни ред од свих описаних, у пракси није ефикасно ни меморијски ни временски.
+	\end{comment}
+	
+	\newpage
+	
+	\subsection{Примов алгоритам}
+	
+	\begin{center}
+		\begin{table}[H]
+			\centering
+			\caption{Времена извршавања бинарног хипа}
+			\begin{tabular}{cccccc} \toprule 
+				$n, m$ & ланац & стабло & звезда граф & комплетан граф & произвољан граф\\ \midrule
+				$10^2$ & 0.028 & 0.035 & 0.033 & 0.47 & 0.021\\ 
+				$10^3$ & 0.041 & 0.047 & 0.049 & 0.93 & 0.15\\
+				$10^4$ & 0.074 & 0.079 & 0.066 & & 0.23\\
+				$10^5$ & 0.45 & 0.37 & 0.38 & & 1.11\\
+				$2\cdot 10^5$ & 0.67 & 0.71 & 0.74 & & 1.86\\
+				\bottomrule
+			\end{tabular}
+		\end{table}
+	\end{center}
+	\begin{center}
+	\begin{table}[H]
+		\centering
+		\caption{Времена извршавања $d$--хипа}
+		\begin{tabular}{cccccc} \toprule
+			$n, m$ & ланац & стабло & звезда граф & комплетан граф & произвољан граф\\ \midrule
+			$10^2$ & 0.035 & 0.033 & 0.034 & 0.44 & 0.029\\ 
+			$10^3$ & 0.044 & 0.045 & 0.052 & 0.84 & 0.12\\
+			$10^4$ & 0.071 & 0.08 & 0.069 & & 0.25\\
+			$10^5$ & 0.48 & 0.37 & 0.39 & & 1.1\\
+			$2\cdot 10^5$ & 0.73 & 0.68 & 0.74 & & 1.68\\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	\end{center}
+	\begin{center}
+	\begin{table}[H]
+		\centering
+		\caption{Времена извршавања Фибоначијевог хипа}
+		\begin{tabular}{cccccc} \toprule 
+			$n, m$ & ланац & стабло & звезда граф & комплетан граф & произвољан граф\\ \midrule
+			$10^2$ & 0.027 & 0.09 & 0.07 & 2.14 & 3.13\\ 
+			$10^3$ & 0.32 & 0.22 & 0.36 & 223.06 & 25.81\\
+			$10^4$ & 3.02 & 1.82 & 0.066 & & 19.74\\
+			$10^5$ & 57.89 & 22.52 & 29.756 & & 169.84\\
+			$2\cdot 10^5$ & 113.4 & 23.09 & 59.93 & & 248.91\\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	\end{center}
+	\begin{center}
+	\begin{table}[H]
+		\centering
+		\caption{Времена извршавања биномног хипа}
+		\begin{tabular}{cccccc} \toprule
+			$n, m$ & ланац & стабло & звезда граф & комплетан граф & произвољан граф\\ \midrule
+			$10^2$ & 0.2 & 0.41 & 0.45 & 1.36 & 1.79\\ 
+			$10^3$ & 2.03 & 1.98 & 1.76 & 188.87 & 12.22\\
+			$10^4$ & 13.17 & 16.01 & 16.02 & & 14.24\\
+			$10^5$ & 78.42 & 70.77 & 72.74 & & 179.19\\
+			$2\cdot 10^5$ & 170.56 & 176.5 & 161.06 & & 237.27\\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	\end{center}
+	\begin{center}
+	\begin{table}[H]
+		\centering
+		\caption{Времена извршавања сплеј стабла}
+		\begin{tabular}{cccccc} \toprule
+			$n, m$ & ланац & стабло & звезда граф & комплетан граф & произвољан граф\\ \midrule
+			$10^2$ & 0.03 & 0.031 & 0.035 & 0.04 & 0.027\\ 
+			$10^3$ & 0.051 & 0.048 & 0.055 & 0.65 & 0.14\\
+			$10^4$ & 0.87 & 0.067 & 0.089 & & 0.37\\
+			$10^5$ & 0.64 & 0.42 & 0.53 & & 1.28\\
+			$2\cdot 10^5$ & 0.7 & 0.87 & 0.81 & & 2.02\\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	\end{center}
+	\begin{center}
+	\begin{table}[H]
+		\centering
+		\caption{Времена извршавања ван Емде Боасовог стабла}
+		\begin{tabular}{cccccc} \toprule
+			$n, m$ & ланац & стабло & звезда граф & комплетан граф & произвољан граф\\ \midrule
+			$10^2$ & 0.05 & 0.89 & 0.77 & 2.44 & 3.84\\ 
+			$10^3$ & 3.23 & 3.76 & 3.54 & 232.39 & 18.96\\
+			$10^4$ & 24.54 & 33.82 & 29.29 & & 47.26\\
+			$10^5$ & 95.64 & 81.68 & 92.9 & & 191.22\\
+			$2\cdot 10^5$ & 165.9 & 160.74 & 170.44 & & 224.63\\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	\end{center}
+
+	\begin{comment}
+	Примећујемо опет исте односе између редова. Фибоначијев хип заостаје за хипом, а биномни хип никако не може да постине боље време. Као једина могућа алтернатива хипу и даље остаје сплеј стабло. Ван Емде Боасово стабло се показало као најмање ефикасна структура података.
+	\end{comment}
+	
+	\newpage
+	
+	\section{Закључак}
+	
+	\begin{comment}
+	Главни циљ овог мотурског рада је био да представи теоријски најјефикасније структуре података за имплементацију Дајкстриног и Примовог алгоритма, као два графовска алгоритма који се доста користе, како у пракси тако и у такмичарском програмираму. Поред операција које се директно користе у овим алгоритмима, описане су и све друге подржане операције. \\
+	Приликом израде самог рада коришћена је сва доступна литература. Евидентно, адекватне литературе на срспком језику нема, па овај рад између осталог то може да поправи. \\
+	
+	Између бинарног хипа и хипа неког другог степена, готово да разлика не постоји. У графовима у којима је $m=O(n)$ $d$--хип може готово да се поистовети са бинарним хипом. Већа разлика би се уочила при јако великим графовима, али питање је колико се често такви графови јављају у пракси. Степен хипа је корисно увећати када је $m=O(n^2)$. \\
+	\indent У поређењу са другим структурама података, бинарни хип односи апсолутну победу. Константа која је сакривена иза $O$ нотације има огроман утицај и из тог разлога су остали редови готово неприменљиви. Евентуално би сплеј стабло могло да се пореди са хипом, али чак и тада је бинарни хип бржи или је разлика неосетна. Треба имати у виду да већина језика има уграђен бинарни хип као основну варијанту приоритетног реда, па је далеко лакши за употребу од сплеј стабла или хипа неког другог степена. \\
+	
+	\textbf{На основу анализираних резултата, закључујемо да је бинарни хип најефикаснији приоритетни ред за имплементацију Дајкстриног и Примовог алгоритма}.
+	\end{comment}
+	
+	Циљ овог матурског рада је био да представи и анализира приоритетне редове који би могли да се искористе у имплементацији Дајкстриног и Примовог алгоритма.
+	
+	\subsection{Резултати}
+	Евалуација је обављена успешно. Постигнути су жељени резултати и утврђено је да бинарни хип представља најбољи избор приоритетног реда за поменуте алгоритме, у случају када број чворова и број грана графа не прелази $10^5$. Остали приоритетни редови су се показали као изузетно неефикасни, изузев сплеј стабла које негде чак и надмашује бинарни хип. Међутим, како је бинарни хип садржан у готово свим модерним програмским језицима, представља логичан избор при имплементацији.
+	
+	\subsection{Стечено знање}
+	Приликом израде матурског рада сам се детаљније упознао са израчунавањем сложености операција као и потпуно новим концептом за мене -- амортизованом анализом. Увидео сам да чак и теоријски оптимална струткура података не мора да има практичну корист. Такође сам побољшао своје знање C++-a, а специјално употребу показивача.
+	
+	\subsection{Даљи рад}
+	Многи приоритетни редови нису обрађени. Неки од њих су \textit{Red-black tree}, \textit{Pairing heap}, \textit{Brodal queue}, \textit{Skew heap}. Резултати овог матурског рада могу послужити за компарацију са поменутим приоритетним редовима, као и са било којом другом структуром података. \\
+	
+	\noindent Приликом израде самог рада сам се сусрео са недостатком адекватне литературе на српском језику. Сматрам да овај матурски рад може послужити као квалитетна литература за описане структуре података.
+	
+	\subsection{Захвалност}
+	Желео бих да изразим захвалност
+	\begin{itemize}
+		\item \textbf{Петру Величковићу} -- мом ментору, који ми је значајно помогао при изради матурског рада. Дао ми је низ сугестија, критика и савета и увек је био на располагању за све што ми је требало.
+		\item \textbf{Владимиру Миленковићу и Филипу Весовићу} -- другарима из школе, захваљујући којима сам значајно напредовао на пољу такмичарског програмирања.
+	\end{itemize}
+	\newpage
+	
+	\renewcommand\refname{Литература}
+	\begin{thebibliography}{9}
+		\bibitem{CLRS}
+		Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein,
+		\textit{Introduction to Algorithms (3rd ed.)},
+		The MIT Press, 2009.
+		
+		\bibitem{RAF}
+		Дејан Живковић,
+		\textit{Основе дизајна и анализе алгоритама},
+		Рачунарски факултет, 2007.
+		
+		\bibitem {Analiza}
+		Зоран Каделбург, Владимир Мићић, Срђан Огњановић,
+		\textit{Анализа са алгебром 2},
+		Круг, 2014.
+		
+		\bibitem{dHeap}
+		Johnson B. Donald,
+		\textit{Priority queues with update and finding minimum spanning trees},
+		Information Processing Letters, 1975.
+		
+		\bibitem{BinHeap}
+		Jean Vuillemin,
+		\textit{A Data Structure for Manipulating Priority Queues},
+		Journal of the ACM, 1978.
+		
+		\bibitem{FibHeap}
+		Michael L. Fredman, Robert E. Tarjan,
+		\textit{Fibonacci heaps and their uses in improved network optimization algorithms},
+		Journal of the ACM, 1987.
+		
+		\bibitem{Splay}
+		Daniel D. Sleator, Robert E. Tarjan,
+		\textit{Selft--Adjusting Binary Search Trees},
+		Journal of the ACM, 1985.
+		
+		\bibitem{BST}
+		Donald Knuth,
+		\textit{The Art of Computer Programming (3rd ed.)},
+		Addison--Wesley, 1997.
+		
+		\bibitem{vEB}
+		Peter van Emde Boas,
+		\textit{Preserving order in a forest in less than logarithmic time},
+		Proceedings of the 16th Annual Symposium on Foundations of Computer Science, 1975.
+		
+		\bibitem{vEB2}
+		Peter van Emde Boas,
+		\textit{Preserving order in a forest in less than logarithmic time and linear space},
+		Information Processing Letters, 1977.
+		
+		\bibitem{vEB3}
+		Peter van Emde Boas, Rob Kaas, Eduard Zijlstra,
+		\textit{Design and implementation of an efficient priority queue},
+		Mathematical Systems Theory, 1976.
+	\end{thebibliography}
+	
+\end{document}
